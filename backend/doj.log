@@ -1,8 +1,0 @@
-{"level":"DEBUG","time":"2021-09-10T14:44:10.236+0800","caller":"backend/main.go:35","msg":"logger init success ..."}
-{"level":"DEBUG","time":"2021-09-10T14:44:42.858+0800","caller":"backend/main.go:35","msg":"logger init success ..."}
-{"level":"DEBUG","time":"2021-09-10T14:45:59.953+0800","caller":"backend/main.go:35","msg":"logger init success ..."}
-{"level":"DEBUG","time":"2021-09-10T14:50:49.415+0800","caller":"backend/main.go:35","msg":"logger init success ..."}
-{"level":"INFO","time":"2021-09-10T14:50:57.456+0800","caller":"logger/logger.go:70","msg":"/","status":200,"method":"GET","path":"/","query":"","ip":"127.0.0.1","user-agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36","errors":"","cost":0.0000579}
-{"level":"INFO","time":"2021-09-10T14:50:57.481+0800","caller":"logger/logger.go:70","msg":"/favicon.ico","status":404,"method":"GET","path":"/favicon.ico","query":"","ip":"127.0.0.1","user-agent":"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36","errors":"","cost":0.000000648}
-{"level":"INFO","time":"2021-09-10T14:51:07.236+0800","caller":"backend/main.go:69","msg":"Shutdown Server ..."}
-{"level":"INFO","time":"2021-09-10T14:51:07.238+0800","caller":"backend/main.go:77","msg":"Server exiting"}

@@ -2,7 +2,7 @@ app:
   name: "DOJ"
   mode: "dev"
   port: "8080"
-  version: "v0.0.01"
+  version: "v0.1.0"
 log:
   level: "debug"
   filename: "doj.log"

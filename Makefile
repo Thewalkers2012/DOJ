@@ -12,8 +12,3 @@ startmysql:
 startredis:
 	sudo docker start DOJ_REDIS
 
-test:
-	go test -v -cover ./backend/...
-
-server:
-	go run ./backend/main.go
