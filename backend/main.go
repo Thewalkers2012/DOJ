@@ -10,12 +10,12 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/Thewalkers2012/DOJ/api"
 	"github.com/Thewalkers2012/DOJ/logger"
 	"github.com/Thewalkers2012/DOJ/repository/mysql"
 	"github.com/Thewalkers2012/DOJ/repository/redis"
 	"github.com/Thewalkers2012/DOJ/routes"
 	"github.com/Thewalkers2012/DOJ/settings"
-	"github.com/spf13/viper"
 	"go.uber.org/zap"
 )
 
@@ -51,8 +51,14 @@ func main() {
 
 	// 6. 启动服务 （优雅关机操作）
 	server := &http.Server{
-		Addr:    fmt.Sprintf(":%d", viper.GetInt("app.port")),
+		Addr:    fmt.Sprintf(":%d", settings.Config.Port),
 		Handler: r,
+	}
+
+	// 7. 初始化化 gin 框架内置的校验器使用的翻译器
+	if err := api.InitTrans("zh"); err != nil {
+		fmt.Printf("init validator trans failed, err: %v\n", err)
+		return
 	}
 
 	go func() {

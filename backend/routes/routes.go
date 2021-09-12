@@ -1,6 +1,8 @@
 package routes
 
 import (
+	"net/http"
+
 	"github.com/Thewalkers2012/DOJ/api"
 	"github.com/Thewalkers2012/DOJ/logger"
 	"github.com/gin-gonic/gin"
@@ -14,6 +16,9 @@ func Setup(mode string) *gin.Engine {
 	}
 
 	r := gin.New()
+	r.GET("/", func(c *gin.Context) {
+		c.String(http.StatusOK, "hello world")
+	})
 	r.Use(logger.GinLogger(), logger.GinRecovery(true))
 
 	// 设置路由组

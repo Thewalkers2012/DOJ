@@ -17,7 +17,13 @@ type createUserRequest struct {
 	Username   string `json:"username" binding:"required"`
 	Password   string `json:"password" binding:"required"`
 	StudentID  string `json:"student_id" binding:"required"`
-	RePassword string `json:"re_password" binding:"required,eqfiele=Password"`
+	RePassword string `json:"re_password" binding:"required,eqfield=Password"`
+}
+
+// create user response
+type createUserResponse struct {
+	Username  string `json:"username"`
+	StudentID string `json:"student_id"`
 }
 
 func SignUpHandler(ctx *gin.Context) {
@@ -27,7 +33,7 @@ func SignUpHandler(ctx *gin.Context) {
 
 		errs, ok := err.(validator.ValidationErrors)
 		if !ok {
-			ctx.JSON(http.StatusBadRequest, err)
+			ctx.JSON(http.StatusBadRequest, responseError(err))
 		} else {
 			ctx.JSON(http.StatusBadRequest, gin.H{
 				"msg": removeTopStruct(errs.Translate(trans)),
@@ -39,7 +45,7 @@ func SignUpHandler(ctx *gin.Context) {
 
 	hashedPassword, err := util.HashPassword(req.Password)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, err)
+		ctx.JSON(http.StatusInternalServerError, responseError(err))
 		return
 	}
 
@@ -57,12 +63,17 @@ func SignUpHandler(ctx *gin.Context) {
 				"msg": server.ErrorUserHasExists.Error(),
 			})
 		} else {
-			ctx.JSON(http.StatusInternalServerError, err)
+			ctx.JSON(http.StatusInternalServerError, responseError(err))
 		}
 		return
 	}
 
+	res := createUserResponse{
+		Username:  user.Username,
+		StudentID: user.StudentID,
+	}
+
 	ctx.JSON(http.StatusOK, gin.H{
-		"user": user,
+		"user": res,
 	})
 }

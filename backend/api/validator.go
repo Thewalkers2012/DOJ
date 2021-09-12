@@ -5,6 +5,7 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/locales/en"
 	"github.com/go-playground/locales/zh"
@@ -68,4 +69,10 @@ func removeTopStruct(fields map[string]string) map[string]string {
 		res[field[strings.Index(field, ".")+1:]] = err
 	}
 	return res
+}
+
+func responseError(err error) gin.H {
+	return gin.H{
+		"msg": err.Error(),
+	}
 }
