@@ -47,7 +47,7 @@ func main() {
 	}
 
 	// 5. 注册路由
-	r := routes.Setup()
+	r := routes.Setup(settings.Config.Mode)
 
 	// 6. 启动服务 （优雅关机操作）
 	server := &http.Server{

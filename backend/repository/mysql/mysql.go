@@ -20,7 +20,6 @@ func Init(cfg *settings.MySQLConfig) (err error) {
 		cfg.DBName,
 		url.QueryEscape(cfg.Location),
 	)
-	fmt.Println(dsn)
 
 	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {

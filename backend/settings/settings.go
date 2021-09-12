@@ -52,6 +52,7 @@ func Init() (err error) {
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath(".")
 	viper.AddConfigPath("..")
+	viper.AddConfigPath("../..")
 
 	err = viper.ReadInConfig()
 	if err != nil {

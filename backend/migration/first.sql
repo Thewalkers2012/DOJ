@@ -1,10 +1,8 @@
 CREATE TABLE `users` (
   `id` bigint PRIMARY KEY AUTO_INCREMENT,
-  `username` varchar(255) UNIQUE NOT NULL,
-  `email` varchar(255) UNIQUE NOT NULL,
+  `username` varchar(255) NOT NULL,
+  `student_id` varchar(255) UNIQUE NOT NULL,
   `hashed_password` varchar(255) NOT NULL,
-  `personal_signature` varchar(255),
-  `password_changed_at` timestamp NOT NULL DEFAULT (now()),
   `created_at` timestamp NOT NULL DEFAULT (now())
 );
 CREATE TABLE `problems` (
@@ -29,9 +27,8 @@ ALTER TABLE `submissions`
 ADD FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 ALTER TABLE `submissions`
 ADD FOREIGN KEY (`question_id`) REFERENCES `problems` (`id`);
-CREATE INDEX `users_index_0` ON `users` (`username`);
-CREATE INDEX `users_index_1` ON `users` (`email`);
-CREATE INDEX `problems_index_2` ON `problems` (`id`);
-CREATE INDEX `problems_index_3` ON `problems` (`name`);
-CREATE INDEX `submissions_index_4` ON `submissions` (`user_id`);
-CREATE INDEX `submissions_index_5` ON `submissions` (`question_id`);
+CREATE INDEX `users_index_0` ON `users` (`student_id`);
+CREATE INDEX `problems_index_1` ON `problems` (`id`);
+CREATE INDEX `problems_index_2` ON `problems` (`name`);
+CREATE INDEX `submissions_index_3` ON `submissions` (`user_id`);
+CREATE INDEX `submissions_index_4` ON `submissions` (`question_id`);
