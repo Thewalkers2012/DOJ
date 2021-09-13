@@ -1,12 +1,18 @@
 <template>
-  <div>
-    <h1>这里是 App 根组件</h1>
+  <doj-navbar></doj-navbar>
+  <div class="container">
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
 
+import DojNavbar from './views/layout/Navbar.vue'
+
 export default {
   name: 'App',
+  components: {
+    DojNavbar,
+  }
 }
 </script>
