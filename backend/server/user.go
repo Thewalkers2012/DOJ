@@ -5,10 +5,15 @@ import (
 
 	"github.com/Thewalkers2012/DOJ/model"
 	"github.com/Thewalkers2012/DOJ/repository/mysql"
+	"github.com/Thewalkers2012/DOJ/util"
+	"github.com/Thewalkers2012/DOJ/util/jwt"
+	"gorm.io/gorm"
 )
 
 var (
-	ErrorUserHasExists = errors.New("该用户已经存在")
+	ErrorUserHasExists   = errors.New("该用户已经存在")
+	ErrorUserNotExists   = errors.New("该用户不存在")
+	ErrorInValidPassword = errors.New("密码错误")
 )
 
 func CreateUser(arg *model.CreateUserParams) (user *model.User, err error) {
@@ -27,4 +32,30 @@ func CreateUser(arg *model.CreateUserParams) (user *model.User, err error) {
 	user = mysql.CreateUser(u)
 
 	return user, nil
+}
+
+func Login(arg *model.LoginParams) (token string, user *model.User, err error) {
+	user, err = mysql.GetUser(arg.StudentID)
+
+	// 1. 能否找到该用户
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return "", nil, ErrorUserNotExists
+		}
+		return "", nil, err
+	}
+
+	// 2. 用户的密码是否正确
+	err = util.CheckPassword(arg.Password, user.HashedPassword)
+	if err != nil {
+		return "", nil, ErrorInValidPassword
+	}
+
+	// 3. 发放 token
+	token, err = jwt.ReleaseToken(user)
+	if err != nil {
+		return "", nil, err
+	}
+
+	return token, user, nil
 }

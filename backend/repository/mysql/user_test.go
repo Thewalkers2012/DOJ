@@ -43,3 +43,11 @@ func TestCheckUserExists(t *testing.T) {
 	ok = CheckUserExists(random.RandomStringWithLetter(8))
 	assert.Equal(t, ok, true)
 }
+
+func TestGetUser(t *testing.T) {
+	user := createRandomUser(t)
+	u1 := CreateUser(user)
+	u2, err := GetUser(u1.StudentID)
+	assert.NoError(t, err)
+	assert.Equal(t, u1, u2)
+}

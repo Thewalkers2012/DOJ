@@ -14,3 +14,9 @@ func CreateUser(user *model.User) *model.User {
 	DB.Select("Username", "HashedPassword", "StudentID").Create(&user)
 	return user
 }
+
+func GetUser(StudentID string) (*model.User, error) {
+	user := new(model.User)
+	err := DB.Where("student_id = ?", StudentID).First(&user).Error
+	return user, err
+}

@@ -15,7 +15,7 @@ import (
 // create user request
 type createUserRequest struct {
 	Username   string `json:"username" binding:"required"`
-	Password   string `json:"password" binding:"required"`
+	Password   string `json:"password" binding:"required,min=6"`
 	StudentID  string `json:"student_id" binding:"required"`
 	RePassword string `json:"re_password" binding:"required,eqfield=Password"`
 }
@@ -75,5 +75,66 @@ func SignUpHandler(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, gin.H{
 		"user": res,
+	})
+}
+
+// login request
+type loginRequest struct {
+	StudentID string `json:"student_id" binding:"required"`
+	Password  string `json:"password" binding:"required"`
+}
+
+// login response
+type loginResponse struct {
+	AccessToekn string             `json:"access_token"`
+	User        createUserResponse `json:"user"`
+}
+
+func LoginHandler(ctx *gin.Context) {
+	req := new(loginRequest)
+	// 1. 校验数据
+	if err := ctx.ShouldBindJSON(req); err != nil {
+		zap.L().Error("Login Handler with invalid param", zap.Error(err))
+
+		errs, ok := err.(validator.ValidationErrors)
+		if !ok {
+			ctx.JSON(http.StatusBadRequest, responseError(err))
+		} else {
+			ctx.JSON(http.StatusBadRequest, gin.H{
+				"msg": removeTopStruct(errs.Translate(trans)),
+			})
+		}
+
+		return
+	}
+
+	// 2. server 层调用接口
+	arg := &model.LoginParams{
+		StudentID: req.StudentID,
+		Password:  req.Password,
+	}
+
+	token, user, err := server.Login(arg)
+	if err != nil {
+		zap.L().Error("login failed", zap.Error(err))
+
+		if errors.Is(err, server.ErrorInValidPassword) || errors.Is(err, server.ErrorUserNotExists) {
+			ctx.JSON(http.StatusForbidden, responseError(err))
+			return
+		}
+
+		ctx.JSON(http.StatusInternalServerError, responseBusy(err))
+	}
+
+	res := loginResponse{
+		User: createUserResponse{
+			Username:  user.Username,
+			StudentID: user.StudentID,
+		},
+		AccessToekn: token,
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"data": res,
 	})
 }

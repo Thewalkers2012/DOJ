@@ -76,3 +76,9 @@ func responseError(err error) gin.H {
 		"msg": err.Error(),
 	}
 }
+
+func responseBusy(err error) gin.H {
+	return gin.H{
+		"msg": "服务器繁忙",
+	}
+}

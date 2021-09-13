@@ -5,3 +5,8 @@ type CreateUserParams struct {
 	HashedPassword string `json:"hashed_password"`
 	StudentID      string `json:"student_id"`
 }
+
+type LoginParams struct {
+	StudentID string `json:"student_id"`
+	Password  string `json:"password"`
+}
