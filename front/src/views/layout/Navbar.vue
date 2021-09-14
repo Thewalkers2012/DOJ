@@ -29,7 +29,10 @@
           >
             登录
           </button>
-          <button class="btn btn-outline-success col" type="submit">
+          <button
+            class="btn btn-outline-success col"
+            @click="this.$router.push('/register')"
+          >
             注册
           </button>
         </div>

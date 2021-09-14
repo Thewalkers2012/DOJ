@@ -7,17 +7,34 @@
             <h5 class="card-title">登录</h5>
             <form @submit.prevent="validate">
               <div class="mt-3 form-group">
-                <label for="username" class="form-label">学号</label>
+                <label for="studentID" class="form-label">学号</label>
                 <input
                   class="form-control"
                   placeholder="请输入学号"
+                  id="studentID"
+                  v-bind:class="{ 'is-invalid': studentIDError }"
+                  v-model="studentID"
+                />
+                <div
+                  class="invalid-feedback"
+                  id="feedback-1"
+                  v-if="studentIDError"
+                >
+                  {{ studentIDErrorMsg }}
+                </div>
+              </div>
+              <div class="mt-3 form-group">
+                <label for="username" class="form-label">用户名</label>
+                <input
+                  class="form-control"
+                  placeholder="请输入用户名"
                   id="username"
                   v-bind:class="{ 'is-invalid': nameError }"
                   v-model="name"
                 />
                 <div
                   class="invalid-feedback"
-                  id="feedback-1"
+                  id="feedback-2"
                   v-if="nameErrorMsg"
                 >
                   {{ nameErrorMsg }}
@@ -35,7 +52,7 @@
                 />
                 <div
                   class="invalid-feedback"
-                  id="feedback-2"
+                  id="feedback-3"
                   v-if="passwordErrorMsg"
                 >
                   {{ passwordErrorMsg }}
@@ -56,33 +73,56 @@
 
 <script>
 export default {
-  name: 'DojLogin',
+  name: 'DojRegister',
 
   data() {
     return {
+      studentID: '',
       name: '',
       password: '',
       nameError: false,
+      studentIDError: false,
       passwordError: false,
       nameErrorMsg: '',
       passwordErrorMsg: '',
+      studentIDErrorMsg: '',
       preName: true,
       prePassword: true,
+      preStudentID: true,
     }
   },
 
   methods: {
     // 数据校验
     validate() {
+      this.validStudentID()
       this.validName()
       this.validPassword()
     },
+    validStudentID() {
+      var len = this.studentID.length
+      if (len != 10) {
+        this.preStudentID = false
+        this.studentIDError = true
+        this.studentIDErrorMsg = '学号必须为 10 位'
+      } else {
+        if (this.preStudentID) {
+          document.getElementById('studentID').className = 'form-control is-valid'
+          return
+        } else {
+          this.preStudentID = true
+        }
+        this.studentIDErrorMsg = ''
+        document.getElementById('studentID').className = 'form-control is-valid'
+        document.getElementById('feedback-1').className = 'valid-feedback'
+      }
+    },
     validName() {
       var len = this.name.length
-      if (len != 10) {
+      if (len == 0) {
         this.preName = false
         this.nameError = true
-        this.nameErrorMsg = '学号必须为 10 位'
+        this.nameErrorMsg = '用户不能为空'
       } else {
         if (this.preName) {
           document.getElementById('username').className = 'form-control is-valid'
@@ -92,7 +132,7 @@ export default {
         }
         this.nameErrorMsg = ''
         document.getElementById('username').className = 'form-control is-valid'
-        document.getElementById('feedback-1').className = 'valid-feedback'
+        document.getElementById('feedback-2').className = 'valid-feedback'
       }
     },
     validPassword() {
@@ -110,7 +150,7 @@ export default {
         }
         this.passwordErrorMsg = ''
         document.getElementById('password').className = 'form-control is-valid'
-        document.getElementById('feedback-2').className = 'valid-feedback'
+        document.getElementById('feedback-3').className = 'valid-feedback'
       }
     }
   }
