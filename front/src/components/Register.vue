@@ -110,7 +110,7 @@ export default {
           document.getElementById('studentID').className = 'form-control is-valid'
           return
         } else {
-          this.preStudentID = true
+          this.preStudentID = true 
         }
         this.studentIDErrorMsg = ''
         document.getElementById('studentID').className = 'form-control is-valid'
@@ -154,6 +154,5 @@ export default {
       }
     }
   }
-
 }
 </script>

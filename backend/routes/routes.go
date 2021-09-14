@@ -5,6 +5,7 @@ import (
 
 	"github.com/Thewalkers2012/DOJ/api"
 	"github.com/Thewalkers2012/DOJ/logger"
+	"github.com/Thewalkers2012/DOJ/middleware"
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,6 +17,7 @@ func Setup(mode string) *gin.Engine {
 	}
 
 	r := gin.New()
+	r.Use(middleware.CorsMiddleware())
 	r.GET("/", func(c *gin.Context) {
 		c.String(http.StatusOK, "hello world")
 	})
