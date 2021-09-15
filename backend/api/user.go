@@ -4,7 +4,9 @@ import (
 	"errors"
 	"net/http"
 
+	"github.com/Thewalkers2012/DOJ/middleware"
 	"github.com/Thewalkers2012/DOJ/model"
+	"github.com/Thewalkers2012/DOJ/repository/mysql"
 	"github.com/Thewalkers2012/DOJ/server"
 	"github.com/Thewalkers2012/DOJ/util"
 	"github.com/gin-gonic/gin"
@@ -80,7 +82,7 @@ func SignUpHandler(ctx *gin.Context) {
 
 // login request
 type loginRequest struct {
-	StudentID string `json:"student_id" binding:"required"`
+	StudentID string `json:"studentID" binding:"required"`
 	Password  string `json:"password" binding:"required"`
 }
 
@@ -136,5 +138,27 @@ func LoginHandler(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, gin.H{
 		"data": res,
+	})
+}
+
+func InfoHandler(ctx *gin.Context) {
+	studentID, _ := ctx.Get(middleware.ContextStudentIDKey)
+
+	user, err := mysql.GetUser(studentID.(string))
+	if err != nil {
+		zap.L().Error("login failed", zap.Error(err))
+
+		if errors.Is(err, server.ErrorInValidPassword) || errors.Is(err, server.ErrorUserNotExists) {
+			ctx.JSON(http.StatusForbidden, responseError(err))
+			return
+		}
+
+		ctx.JSON(http.StatusInternalServerError, responseBusy(err))
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"data": gin.H{
+			"user": user,
+		},
 	})
 }

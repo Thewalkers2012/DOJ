@@ -1,18 +1,26 @@
 <template>
-  <doj-navbar></doj-navbar>
-  <div class="container">
-    <router-view></router-view>
+  <div id="app">
+    <Navbar />
+    <b-container>
+      <router-view />
+    </b-container>
   </div>
 </template>
 
 <script>
-
-import DojNavbar from './views/layout/Navbar.vue'
+import Navbar from './views/loyout/Navbar.vue';
 
 export default {
-  name: 'App',
   components: {
-    DojNavbar,
-  }
-}
+    Navbar,
+  },
+  data() {
+    return {
+
+    };
+  },
+};
 </script>
+
+<style lang="scss">
+</style>

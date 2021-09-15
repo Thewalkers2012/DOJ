@@ -1,6 +1,6 @@
 name: "DOJ"
 mode: "dev"
-port: "8080"
+port: "9090"
 version: "v0.1.0"
 log:
   level: "debug"

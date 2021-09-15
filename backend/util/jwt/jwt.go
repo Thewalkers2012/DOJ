@@ -18,7 +18,7 @@ var jwtKey = []byte("dojnb")
 // jwt 包
 
 type MyClaims struct {
-	StudentID string `json:"student_id"`
+	StudentID string `json:"studentID"`
 	jwt.StandardClaims
 }
 
