@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import store from '../store';
 import Home from '../views/Home.vue';
+import problemRoutes from './module/problem';
 import userRoutes from './module/user';
 
 Vue.use(VueRouter);
@@ -18,6 +19,7 @@ const routes = [
     component: () => import('../views/About.vue'),
   },
   ...userRoutes,
+  ...problemRoutes,
 ];
 
 const router = new VueRouter({

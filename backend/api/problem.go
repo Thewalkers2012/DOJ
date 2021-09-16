@@ -68,8 +68,8 @@ func GetProblemByIDHandler(ctx *gin.Context) {
 }
 
 type listProblemRequest struct {
-	PageNum  int `form:"page_num" binding:"required,min=1"`
-	PageSize int `form:"page_size" binding:"required,min=5,max=10"`
+	PageNum  int `form:"pageNum" binding:"required,min=1"`
+	PageSize int `form:"pageSize" binding:"required,min=5,max=10"`
 }
 
 func GetProblemList(ctx *gin.Context) {
