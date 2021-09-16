@@ -9,6 +9,12 @@ import (
 const alphabet = "abcdefghijklmnopqrstuvwxyz"
 const number = "0123456789"
 
+const (
+	easy       = "简单"
+	middle     = "中等"
+	difficulty = "困难"
+)
+
 func init() {
 	rand.Seed(time.Now().Unix())
 }
@@ -58,4 +64,16 @@ func RandomUserName() string {
 func RandomPassword() string {
 	length := RandomInt(6, 12)
 	return RandomStringWithLetter(int(length))
+}
+
+// RandomDiffcultyLevel generage a random level
+func RandomDiffcultyLevel() string {
+	k := RandomInt(0, 2)
+	if k == 0 {
+		return easy
+	} else if k == 1 {
+		return middle
+	} else {
+		return difficulty
+	}
 }
