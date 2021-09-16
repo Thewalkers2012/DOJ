@@ -30,3 +30,8 @@ func GetProblemByID(pid int64) (*model.Problem, error) {
 
 	return problem, nil
 }
+
+// GetProblemList 获取 problem 的列表
+func GetProblemList(offset, limit int) ([]*model.Problem, error) {
+	return mysql.GetProblemList(offset, limit)
+}

@@ -34,6 +34,7 @@ func Setup(mode string) *gin.Engine {
 	// 题目相关的业务
 	v1.POST("/problem", middleware.JWTAuthorMiddleware(), api.CreateProblemHandler)
 	v1.GET("/problem/:id", middleware.JWTAuthorMiddleware(), api.GetProblemByIDHandler)
+	v1.GET("/problem", middleware.JWTAuthorMiddleware(), api.GetProblemList)
 
 	return r
 }

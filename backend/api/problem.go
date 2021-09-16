@@ -17,6 +17,8 @@ const (
 	createProblemSuccessful = "创建题目成功"
 	getProblemIdFailed      = "获取题目ID失败"
 	getProblemSuccess       = "获取题目成功"
+	invalidParams           = "请求参数错误"
+	getProblemListSuccess   = "获取问题列表成功"
 )
 
 func CreateProblemHandler(ctx *gin.Context) {
@@ -63,4 +65,37 @@ func GetProblemByIDHandler(ctx *gin.Context) {
 	response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{
 		"problem": problem,
 	}, getProblemSuccess)
+}
+
+type listProblemRequest struct {
+	PageNum  int `form:"page_num" binding:"required,min=1"`
+	PageSize int `form:"page_size" binding:"required,min=5,max=10"`
+}
+
+func GetProblemList(ctx *gin.Context) {
+	req := new(listProblemRequest)
+	if err := ctx.ShouldBindQuery(req); err != nil {
+		zap.L().Error("api.GetProblem failed", zap.Error(err))
+
+		errs, ok := err.(validator.ValidationErrors)
+		if !ok {
+			response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, err.Error())
+		} else {
+			response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, removeTopStruct(errs.Translate(trans)))
+		}
+		return
+	}
+
+	offset := req.PageNum
+	limit := req.PageSize
+
+	problems, err := server.GetProblemList((offset-1)*limit, limit)
+	if err != nil {
+		response.Response(ctx, http.StatusInternalServerError, http.StatusInternalServerError, gin.H{}, busy)
+		return
+	}
+
+	response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{
+		"problems": problems,
+	}, getProblemListSuccess)
 }

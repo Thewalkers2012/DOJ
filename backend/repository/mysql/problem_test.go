@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func createRandomProblem() *model.CreateProblemRequest {
+func createRandomProblem(t *testing.T) *model.Problem {
 	problem := &model.CreateProblemRequest{
 		Name:            random.RandomUserName(),
 		Description:     random.RandomStringWithLetter(100),
@@ -19,14 +19,7 @@ func createRandomProblem() *model.CreateProblemRequest {
 		DifficultyLevel: random.RandomDiffcultyLevel(),
 	}
 
-	return problem
-}
-
-func TestCreateProblem(t *testing.T) {
-	problem := createRandomProblem()
-
 	p := CreateProblem(problem)
-
 	assert.NotZero(t, p.ID)
 	assert.Equal(t, problem.Author, p.Author)
 	assert.Equal(t, problem.Description, p.Description)
@@ -35,4 +28,24 @@ func TestCreateProblem(t *testing.T) {
 	assert.Equal(t, problem.TimeLimit, p.TimeLimit)
 	assert.Equal(t, problem.Name, p.Name)
 	assert.Equal(t, problem.TestCase, p.TestCase)
+
+	return p
+}
+
+func TestCreateProblem(t *testing.T) {
+	createRandomProblem(t)
+}
+
+func TestGetProblem(t *testing.T) {
+	p1 := createRandomProblem(t)
+	p2, err := GetProblemByID(p1.ID)
+	assert.NoError(t, err)
+
+	assert.Equal(t, p1.ID, p2.ID)
+	assert.Equal(t, p1.Author, p2.Author)
+	assert.Equal(t, p1.Description, p2.Description)
+	assert.Equal(t, p1.DifficultyLevel, p2.DifficultyLevel)
+	assert.Equal(t, p1.MemoryLimit, p2.MemoryLimit)
+	assert.Equal(t, p1.TimeLimit, p2.TimeLimit)
+	assert.Equal(t, p1.TestCase, p2.TestCase)
 }

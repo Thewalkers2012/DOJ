@@ -27,8 +27,8 @@ func GetProblemByID(pid int64) (*model.Problem, error) {
 	return problem, err
 }
 
-// func GetUser(StudentID string) (*model.User, error) {
-// 	user := new(model.User)
-// 	err := DB.Where("student_id = ?", StudentID).First(&user).Error
-// 	return user, err
-// }
+func GetProblemList(offset, limit int) ([]*model.Problem, error) {
+	problems := []*model.Problem{}
+	err := DB.Offset(offset).Limit(limit).Find(&problems).Error
+	return problems, err
+}
