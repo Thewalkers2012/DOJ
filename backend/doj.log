@@ -1,0 +1,18 @@
+{"level":"DEBUG","time":"2021-09-16T12:34:19.906+0800","caller":"backend/main.go:35","msg":"logger init success ..."}
+{"level":"INFO","time":"2021-09-16T12:34:28.577+0800","caller":"logger/logger.go:70","msg":"/api/v1/problem","status":401,"method":"POST","path":"/api/v1/problem","query":"","ip":"::1","user-agent":"PostmanRuntime/7.28.4","errors":"","cost":0.000040222}
+{"level":"INFO","time":"2021-09-16T12:35:34.257+0800","caller":"logger/logger.go:70","msg":"/api/v1/register","status":200,"method":"POST","path":"/api/v1/register","query":"","ip":"::1","user-agent":"PostmanRuntime/7.28.4","errors":"","cost":0.065626641}
+{"level":"ERROR","time":"2021-09-16T12:36:14.109+0800","caller":"api/problem.go:21","msg":"api.CreateProblem failed","error":"json: cannot unmarshal string into Go struct field CreateProblemRequest.time_limit of type int64"}
+{"level":"INFO","time":"2021-09-16T12:36:14.109+0800","caller":"logger/logger.go:70","msg":"/api/v1/problem","status":400,"method":"POST","path":"/api/v1/problem","query":"","ip":"::1","user-agent":"PostmanRuntime/7.28.4","errors":"","cost":0.000190385}
+{"level":"INFO","time":"2021-09-16T12:36:48.546+0800","caller":"logger/logger.go:70","msg":"/api/v1/problem","status":200,"method":"POST","path":"/api/v1/problem","query":"","ip":"::1","user-agent":"PostmanRuntime/7.28.4","errors":"","cost":0.009247342}
+{"level":"INFO","time":"2021-09-16T12:38:12.983+0800","caller":"backend/main.go:75","msg":"Shutdown Server ..."}
+{"level":"INFO","time":"2021-09-16T12:38:12.985+0800","caller":"backend/main.go:83","msg":"Server exiting"}
+{"level":"DEBUG","time":"2021-09-16T13:11:00.906+0800","caller":"backend/main.go:35","msg":"logger init success ..."}
+{"level":"INFO","time":"2021-09-16T13:11:03.494+0800","caller":"logger/logger.go:70","msg":"/api/v1/problem/3","status":401,"method":"GET","path":"/api/v1/problem/3","query":"","ip":"::1","user-agent":"PostmanRuntime/7.28.4","errors":"","cost":0.000041}
+{"level":"INFO","time":"2021-09-16T13:11:13.937+0800","caller":"logger/logger.go:70","msg":"/api/v1/problem/3","status":200,"method":"GET","path":"/api/v1/problem/3","query":"","ip":"::1","user-agent":"PostmanRuntime/7.28.4","errors":"","cost":0.000970199}
+{"level":"INFO","time":"2021-09-16T13:12:10.966+0800","caller":"logger/logger.go:70","msg":"/api/v1/problem/3","status":200,"method":"GET","path":"/api/v1/problem/3","query":"","ip":"::1","user-agent":"PostmanRuntime/7.28.4","errors":"","cost":0.000611238}
+{"level":"INFO","time":"2021-09-16T13:12:12.128+0800","caller":"backend/main.go:75","msg":"Shutdown Server ..."}
+{"level":"INFO","time":"2021-09-16T13:12:12.130+0800","caller":"backend/main.go:83","msg":"Server exiting"}
+{"level":"DEBUG","time":"2021-09-16T13:12:14.488+0800","caller":"backend/main.go:35","msg":"logger init success ..."}
+{"level":"INFO","time":"2021-09-16T13:12:15.812+0800","caller":"logger/logger.go:70","msg":"/api/v1/problem/3","status":200,"method":"GET","path":"/api/v1/problem/3","query":"","ip":"::1","user-agent":"PostmanRuntime/7.28.4","errors":"","cost":0.001090203}
+{"level":"INFO","time":"2021-09-16T13:12:25.256+0800","caller":"backend/main.go:75","msg":"Shutdown Server ..."}
+{"level":"INFO","time":"2021-09-16T13:12:25.258+0800","caller":"backend/main.go:83","msg":"Server exiting"}

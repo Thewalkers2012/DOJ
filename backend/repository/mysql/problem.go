@@ -4,17 +4,6 @@ import (
 	"github.com/Thewalkers2012/DOJ/model"
 )
 
-// type Problem struct {
-// 	ID              int64  `json:"problem_id"`
-// 	Name            string `json:"problem_name"`
-// 	Description     string `json:"description"`
-// 	TestCase        string `json:"test_case"`
-// 	Author          string `json:"author"`
-// 	TimeLimit       int64  `json:"time_limit"`
-// 	MemoryLimit     int64  `json:"memory_limit"`
-// 	DifficultyLevel string `json:"difficulty_level"`
-// }
-
 func CreateProblem(req *model.CreateProblemRequest) *model.Problem {
 	problem := &model.Problem{
 		Name:            req.Name,
@@ -30,3 +19,16 @@ func CreateProblem(req *model.CreateProblemRequest) *model.Problem {
 
 	return problem
 }
+
+func GetProblemByID(pid int64) (*model.Problem, error) {
+	problem := new(model.Problem)
+	err := DB.Where("id", pid).First(problem).Error
+
+	return problem, err
+}
+
+// func GetUser(StudentID string) (*model.User, error) {
+// 	user := new(model.User)
+// 	err := DB.Where("student_id = ?", StudentID).First(&user).Error
+// 	return user, err
+// }
