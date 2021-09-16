@@ -27,7 +27,7 @@ func Setup(mode string) *gin.Engine {
 	v1 := r.Group("/api/v1")
 
 	// 注册用户的业务
-	v1.POST("/signup", api.SignUpHandler)
+	v1.POST("/register", api.SignUpHandler)
 	v1.POST("/login", api.LoginHandler)
 	v1.GET("/info", middleware.JWTAuthorMiddleware(), api.InfoHandler)
 

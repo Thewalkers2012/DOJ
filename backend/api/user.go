@@ -9,6 +9,7 @@ import (
 	"github.com/Thewalkers2012/DOJ/repository/mysql"
 	"github.com/Thewalkers2012/DOJ/server"
 	"github.com/Thewalkers2012/DOJ/util"
+	"github.com/Thewalkers2012/DOJ/util/jwt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"go.uber.org/zap"
@@ -16,10 +17,9 @@ import (
 
 // create user request
 type createUserRequest struct {
-	Username   string `json:"username" binding:"required"`
-	Password   string `json:"password" binding:"required,min=6"`
-	StudentID  string `json:"student_id" binding:"required"`
-	RePassword string `json:"re_password" binding:"required,eqfield=Password"`
+	Username  string `json:"username" binding:"required"`
+	Password  string `json:"password" binding:"required,min=6"`
+	StudentID string `json:"studentID" binding:"required"`
 }
 
 // create user response
@@ -70,13 +70,25 @@ func SignUpHandler(ctx *gin.Context) {
 		return
 	}
 
+	token, err := jwt.ReleaseToken(user)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"data": gin.H{
+				"msg": "服务器繁忙",
+			},
+		})
+	}
+
 	res := createUserResponse{
 		Username:  user.Username,
 		StudentID: user.StudentID,
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{
-		"user": res,
+		"data": gin.H{
+			"user":         res,
+			"access_token": token,
+		},
 	})
 }
 

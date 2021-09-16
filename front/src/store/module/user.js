@@ -24,11 +24,12 @@ const userModule = {
   },
 
   actions: {
-    register(context, { name, telephone, password }) {
+    register(context, { username, studentID, password }) {
       return new Promise((resolve, reject) => {
-        userService.register({ name, telephone, password }).then((res) => {
+        userService.register({ username, studentID, password }).then((res) => {
           // 保存 token
-          context.commit('SET_TOKEN', res.data.data.token);
+          console.log(res);
+          context.commit('SET_TOKEN', res.data.data.access_token);
           // 获取用户信息
           return userService.info();
         }).then((res) => {

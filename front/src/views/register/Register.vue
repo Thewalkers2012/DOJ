@@ -6,22 +6,25 @@
           <b-form>
             <b-form-group label="姓名">
               <b-form-input
-                v-model="$v.user.name.$model"
+                v-model="$v.user.username.$model"
                 type="text"
                 required
-                placeholder="请输入您的名称（选填）"
+                placeholder="请输入您的姓名"
               ></b-form-input>
+              <b-form-invalid-feedback :state="validateState('username')">
+                学生的姓名不能为空
+              </b-form-invalid-feedback>
             </b-form-group>
-            <b-form-group label="电话">
+            <b-form-group label="学号">
               <b-form-input
-                v-model="$v.user.telephone.$model"
+                v-model="$v.user.studentID.$model"
                 type="number"
                 required
-                :state="validateState('telephone')"
-                placeholder="请输入您的电话"
+                :state="validateState('studentID')"
+                placeholder="请输入您的学号"
               ></b-form-input>
-              <b-form-invalid-feedback :state="validateState('telephone')">
-                手机号必须为 11 位
+              <b-form-invalid-feedback :state="validateState('studentID')">
+                学号必须为 10 位
               </b-form-invalid-feedback>
             </b-form-group>
             <b-form-group label="密码">
@@ -49,16 +52,15 @@
 </template>
 
 <script>
-import { required, minLength } from 'vuelidate/lib/validators';
+import { required, minLength, maxLength } from 'vuelidate/lib/validators';
 import { mapActions } from 'vuex';
-import customValidator from '../../helper/validator';
 
 export default {
   data() {
     return {
       user: {
-        name: '',
-        telephone: '',
+        username: '',
+        studentID: '',
         password: '',
       },
     };
@@ -66,10 +68,13 @@ export default {
 
   validations: {
     user: {
-      name: {},
-      telephone: {
+      username: {
         required,
-        telephone: customValidator.telephoneValidator,
+      },
+      studentID: {
+        required,
+        minLength: minLength(10),
+        maxLength: maxLength(10),
       },
       password: {
         required,
