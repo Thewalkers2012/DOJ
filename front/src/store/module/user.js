@@ -28,7 +28,6 @@ const userModule = {
       return new Promise((resolve, reject) => {
         userService.register({ username, studentID, password }).then((res) => {
           // 保存 token
-          console.log(res);
           context.commit('SET_TOKEN', res.data.data.access_token);
           // 获取用户信息
           return userService.info();
@@ -46,7 +45,7 @@ const userModule = {
       return new Promise((resolve, reject) => {
         userService.login({ studentID, password }).then((res) => {
           // 保存 token
-          context.commit('SET_TOKEN', res.data.data.access_token);
+          context.commit('SET_TOKEN', res.data.data.user.access_token);
           // 获取用户信息
           return userService.info();
         }).then((res) => {

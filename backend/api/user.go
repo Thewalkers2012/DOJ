@@ -7,12 +7,20 @@ import (
 	"github.com/Thewalkers2012/DOJ/middleware"
 	"github.com/Thewalkers2012/DOJ/model"
 	"github.com/Thewalkers2012/DOJ/repository/mysql"
+	"github.com/Thewalkers2012/DOJ/response"
 	"github.com/Thewalkers2012/DOJ/server"
 	"github.com/Thewalkers2012/DOJ/util"
 	"github.com/Thewalkers2012/DOJ/util/jwt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"go.uber.org/zap"
+)
+
+const (
+	busy               = "服务器繁忙"
+	registerSuccessful = "注册成功"
+	loginSuccessful    = "登录成功"
+	infoSuccessful     = "获取用户信息成功"
 )
 
 // create user request
@@ -25,7 +33,7 @@ type createUserRequest struct {
 // create user response
 type createUserResponse struct {
 	Username  string `json:"username"`
-	StudentID string `json:"student_id"`
+	StudentID string `json:"studentID"`
 }
 
 func SignUpHandler(ctx *gin.Context) {
@@ -35,11 +43,9 @@ func SignUpHandler(ctx *gin.Context) {
 
 		errs, ok := err.(validator.ValidationErrors)
 		if !ok {
-			ctx.JSON(http.StatusBadRequest, responseError(err))
+			response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, err.Error())
 		} else {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"msg": removeTopStruct(errs.Translate(trans)),
-			})
+			response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, removeTopStruct(errs.Translate(trans)))
 		}
 
 		return
@@ -47,7 +53,7 @@ func SignUpHandler(ctx *gin.Context) {
 
 	hashedPassword, err := util.HashPassword(req.Password)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, responseError(err))
+		response.Response(ctx, http.StatusInternalServerError, http.StatusInternalServerError, gin.H{}, busy)
 		return
 	}
 
@@ -61,22 +67,16 @@ func SignUpHandler(ctx *gin.Context) {
 	if err != nil {
 		zap.L().Error("server CreateUser function failed, ", zap.Error(err))
 		if errors.Is(err, server.ErrorUserHasExists) {
-			ctx.JSON(http.StatusForbidden, gin.H{
-				"msg": server.ErrorUserHasExists.Error(),
-			})
+			response.Response(ctx, http.StatusForbidden, http.StatusForbidden, gin.H{}, err.Error())
 		} else {
-			ctx.JSON(http.StatusInternalServerError, responseError(err))
+			response.Response(ctx, http.StatusInternalServerError, http.StatusInternalServerError, gin.H{}, busy)
 		}
 		return
 	}
 
 	token, err := jwt.ReleaseToken(user)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{
-			"data": gin.H{
-				"msg": "服务器繁忙",
-			},
-		})
+		response.Response(ctx, http.StatusInternalServerError, http.StatusInternalServerError, gin.H{}, busy)
 	}
 
 	res := createUserResponse{
@@ -84,12 +84,10 @@ func SignUpHandler(ctx *gin.Context) {
 		StudentID: user.StudentID,
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{
-		"data": gin.H{
-			"user":         res,
-			"access_token": token,
-		},
-	})
+	response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{
+		"user":         res,
+		"access_token": token,
+	}, registerSuccessful)
 }
 
 // login request
@@ -112,11 +110,9 @@ func LoginHandler(ctx *gin.Context) {
 
 		errs, ok := err.(validator.ValidationErrors)
 		if !ok {
-			ctx.JSON(http.StatusBadRequest, responseError(err))
+			response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, err.Error())
 		} else {
-			ctx.JSON(http.StatusBadRequest, gin.H{
-				"msg": removeTopStruct(errs.Translate(trans)),
-			})
+			response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, removeTopStruct(errs.Translate(trans)))
 		}
 
 		return
@@ -132,12 +128,14 @@ func LoginHandler(ctx *gin.Context) {
 	if err != nil {
 		zap.L().Error("login failed", zap.Error(err))
 
-		if errors.Is(err, server.ErrorInValidPassword) || errors.Is(err, server.ErrorUserNotExists) {
-			ctx.JSON(http.StatusForbidden, responseError(err))
-			return
+		errs, ok := err.(validator.ValidationErrors)
+		if !ok {
+			response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, err.Error())
+		} else {
+			response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, errs.Translate(trans))
 		}
 
-		ctx.JSON(http.StatusInternalServerError, responseBusy(err))
+		return
 	}
 
 	res := loginResponse{
@@ -148,9 +146,9 @@ func LoginHandler(ctx *gin.Context) {
 		AccessToekn: token,
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{
-		"data": res,
-	})
+	response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{
+		"user": res,
+	}, loginSuccessful)
 }
 
 func InfoHandler(ctx *gin.Context) {
@@ -158,19 +156,13 @@ func InfoHandler(ctx *gin.Context) {
 
 	user, err := mysql.GetUser(studentID.(string))
 	if err != nil {
-		zap.L().Error("login failed", zap.Error(err))
+		zap.L().Error("mysql.GetUser failed", zap.Error(err))
 
-		if errors.Is(err, server.ErrorInValidPassword) || errors.Is(err, server.ErrorUserNotExists) {
-			ctx.JSON(http.StatusForbidden, responseError(err))
-			return
-		}
-
-		ctx.JSON(http.StatusInternalServerError, responseBusy(err))
+		response.Response(ctx, http.StatusInternalServerError, http.StatusInternalServerError, gin.H{}, busy)
+		return
 	}
 
-	ctx.JSON(http.StatusOK, gin.H{
-		"data": gin.H{
-			"user": user,
-		},
-	})
+	response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{
+		"user": user,
+	}, infoSuccessful)
 }
