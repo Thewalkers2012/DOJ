@@ -34,8 +34,19 @@
         {{ problem.test_case }}
       </div>
       <!-- 代码编辑区域 -->
-      <b-card class="mt-5" title="编辑器">
-        <Edit> </Edit>
+      <b-card class="mt-5">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <h4>编辑器</h4>
+          </div>
+          <div>
+            <b-form-select
+              v-model="selected"
+              :options="options"
+            ></b-form-select>
+          </div>
+        </div>
+        <Edit class="mt-3"> </Edit>
         <!-- <pre v-highlightjs><code class="cpp">{{ code }}</code></pre> -->
       </b-card>
     </b-card>
@@ -50,15 +61,12 @@ export default {
   data() {
     return {
       problem: {},
-      code: `#include <bits/stdc++.h>
-using namespace std;
-
-int main() {
-  int a, b;
-  cin >> a >> b;
-  cout << a + b << endl;
-  return 0;
-}`,
+      selected: 'c++',
+      options: [
+        { value: 'c++', text: 'c++' },
+        { value: 'java', text: 'java' },
+        { value: 'python', text: 'python' },
+      ],
     };
   },
   created() {

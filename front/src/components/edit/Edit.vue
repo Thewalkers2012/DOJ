@@ -1,5 +1,5 @@
 <template>
-  <div id="container" style="width: 1000px; height: 600px"></div>
+  <div id="container" style="height: 600px"></div>
   <!--宽高自行设定 -->
 </template>
 
@@ -18,7 +18,7 @@ export default {
   methods: {
     initEditor() {
       this.editor = monaco.editor.create(document.getElementById('container'), {
-        language: 'java',
+        language: 'cpp',
         value: '',
         automaticLayout: true,
         theme: 'vs-light',
