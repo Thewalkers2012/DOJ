@@ -1,23 +1,24 @@
-import storeService from '../../service/storeService';
-import problemService from '../../service/problemService';
-
 const problemModule = {
-  namespaced: true,
+  namespace: true,
   state: {
-    token: storeService.get(storeService.USER_TOKEN),
-    userInfo: storeService.get(storeService.USER_INFO) ? JSON.parse(storeService.get(storeService.USER_INFO)) : null, // eslint-disable-line
+    problemID: 0,
   },
-
+  mutations: {
+    SET_PROBLEM_ID(state, id) {
+      // 更新 state
+      state.problemID = id;
+    },
+    GET_PROBLEM_ID(state) {
+      return state.problemID;
+    },
+  },
   actions: {
-    getProblemList(context, { pageNum, pageSize }) {
-      return new Promise((reject) => {
-        problemService.getProblemList({ pageNum, pageSize }).then((res) => {
-          console.log(1);
-          return res.data.data.problems;
-        }).catch((err) => {
-          reject(err);
-        });
-      });
+    setProblemID(context, id) {
+      console.log(id);
+      context.commit('SET_PROBLEM_ID', id);
+    },
+    getProblemID(context) {
+      return context.commit('GET_PROBLEM_ID');
     },
   },
 };

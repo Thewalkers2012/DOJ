@@ -9,7 +9,7 @@
 
         <b-collapse id="nav-collapse" is-nav>
           <b-navbar-nav>
-            <b-nav-item @click="$router.push({ name: 'problem' })"
+            <b-nav-item @click="$router.push({ name: 'problemList' })"
               >题库</b-nav-item
             >
             <b-nav-item href="#">关于我们</b-nav-item>
