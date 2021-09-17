@@ -3,6 +3,9 @@ import axios from 'axios';
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue';
 import VueAxios from 'vue-axios';
 import Vuelidate from 'vuelidate';
+import VueHighlightJS from 'vue-highlightjs';
+// hybrid github monokai-sublime idea
+import 'highlight.js/styles/hybrid.css';
 import App from './App.vue';
 import router from './router';
 import store from './store';
@@ -17,6 +20,9 @@ Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 // axios
 Vue.use(VueAxios, axios);
+
+// 代码模块主题
+Vue.use(VueHighlightJS);
 
 new Vue({
   router,
