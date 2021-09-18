@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 <template>
   <div class="Problem">
     <b-card class="mt-3">
@@ -39,16 +40,30 @@
           <div>
             <h4>编辑器</h4>
           </div>
-          <div>
+          <div class="d-flex">
             <b-form-select
-              v-model="selected"
-              :options="options"
+              v-model="selected2"
+              :options="options2"
+              class="ml-3"
+            ></b-form-select>
+            <b-form-select
+              class="ml-3"
+              v-model="selected1"
+              :options="options1"
             ></b-form-select>
           </div>
         </div>
-        <Edit class="mt-3"> </Edit>
+        <Edit class="mt-3" :propLanguage="selected1" :propTheme="selected2">
+        </Edit>
         <!-- <pre v-highlightjs><code class="cpp">{{ code }}</code></pre> -->
       </b-card>
+      <div class="d-flex mt-3 justify-content-between align-items-center">
+        <div></div>
+        <div>
+          <b-button variant="light" pill>调试代码</b-button>
+          <b-button variant="success" pill class="ml-3"> 提交代码 </b-button>
+        </div>
+      </div>
     </b-card>
   </div>
 </template>
@@ -61,11 +76,16 @@ export default {
   data() {
     return {
       problem: {},
-      selected: 'c++',
-      options: [
-        { value: 'c++', text: 'c++' },
+      selected1: 'cpp',
+      options1: [
+        { value: 'cpp', text: 'c++' },
         { value: 'java', text: 'java' },
         { value: 'python', text: 'python' },
+      ],
+      selected2: 'vs-dark',
+      options2: [
+        { value: 'vs-dark', text: 'vs-dark' },
+        { value: 'vs-light', text: 'vs-light' },
       ],
     };
   },

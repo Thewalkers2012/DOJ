@@ -7,6 +7,10 @@
 import * as monaco from 'monaco-editor';
 
 export default {
+  props: {
+    propLanguage: String,
+    propTheme: String,
+  },
   data() {
     return {
       editor: null,
@@ -18,23 +22,33 @@ export default {
   methods: {
     initEditor() {
       this.editor = monaco.editor.create(document.getElementById('container'), {
-        language: 'cpp',
+        language: this.propLanguage,
         value: '',
         automaticLayout: true,
-        theme: 'vs-light',
+        theme: this.propTheme,
         selectOnLineNumbers: true,
         roundedSelection: false,
         readOnly: false,
         cursorStyle: 'line',
         glyphMargin: true,
         useTabStops: false,
-        fontSize: 16,
+        fontSize: 17,
         autoIndent: true,
         quickSuggestionsDelay: 500,
       });
     },
     getValue() {
       this.editor.getValue();
+    },
+  },
+  watch: {
+    propLanguage() {
+      monaco.editor.setModelLanguage(this.editor.getModel(), this.propLanguage);
+    },
+    propTheme() {
+      this.editor.updateOptions({
+        theme: this.propTheme,
+      });
     },
   },
 };
