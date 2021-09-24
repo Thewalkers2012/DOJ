@@ -21,7 +21,9 @@ CREATE TABLE `submissions` (
   `question_id` bigint NOT NULL,
   `language` varchar(255) NOT NULL,
   `score` bigint NOT NULL,
-  `result` varchar(255) NOT NULL
+  `result` varchar(255) NOT NULL,
+  `code` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT (now())
 );
 ALTER TABLE `submissions`
 ADD FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);

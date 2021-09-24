@@ -20,3 +20,13 @@ type CreateProblemRequest struct {
 	MemoryLimit     int64  `json:"memory_limit" binding:"required,min=1"`
 	DifficultyLevel string `json:"difficulty_level" binding:"required"`
 }
+
+// 从前端获取的用户提交的参数
+type CreateSubmissionRequest struct {
+	UserID      int64  `json:"userID"`
+	QuestionsID int64  `json:"questionID"`
+	Language    string `json:"langueage"`
+	Code        string `json:"code"`
+}
+
+// TODO: 从评测机来获取运行结果
