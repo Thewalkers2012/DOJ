@@ -15,7 +15,12 @@ export default {
     return {
       editor: null,
       code: '',
+      problemID: '',
     };
+  },
+  created() {
+    this.problemID = sessionStorage.getItem('problem_id');
+    console.log(this.problemID);
   },
   mounted() {
     this.initEditor();
@@ -24,7 +29,7 @@ export default {
     initEditor() {
       this.editor = monaco.editor.create(document.getElementById('container'), {
         language: this.propLanguage,
-        value: sessionStorage.getItem('code'),
+        value: localStorage.getItem(`code_${this.problemID}`),
         automaticLayout: true,
         theme: this.propTheme,
         selectOnLineNumbers: true,
@@ -40,7 +45,7 @@ export default {
       this.editor.onKeyUp(() => {
         // 当按下键盘，判断当前编辑器的文本与已保存的编辑器文本是否一致
         this.code = this.editor.getValue();
-        sessionStorage.setItem('code', this.code);
+        localStorage.setItem(`code_${this.problemID}`, this.code);
       });
     },
   },

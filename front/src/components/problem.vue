@@ -110,7 +110,7 @@ export default {
     async submitProblem() {
       this.submitParams.questionID = parseInt(sessionStorage.getItem('problem_id'), 10);
       this.submitParams.language = this.selected1;
-      this.submitParams.code = sessionStorage.getItem('code');
+      this.submitParams.code = localStorage.getItem(`code_${this.submitParams.questionID}`);
       console.log(this.submitParams);
       const { data: res } = await problemService.submitProblem(this.submitParams);
       console.log(res);

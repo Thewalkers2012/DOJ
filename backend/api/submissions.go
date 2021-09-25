@@ -73,7 +73,7 @@ func RunCodeHandler(ctx *gin.Context) {
 		return
 	}
 
-	fmt.Println(req)
+	fmt.Printf("%v", req)
 
 	response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{
 		"response": req,
