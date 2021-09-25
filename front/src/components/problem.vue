@@ -60,8 +60,12 @@
       <div class="d-flex mt-3 justify-content-between align-items-center">
         <div></div>
         <div>
-          <b-button variant="light" pill>调试代码</b-button>
-          <b-button variant="success" pill class="ml-3"> 提交代码 </b-button>
+          <b-button variant="light" pill @click="submitProblem"
+            >调试代码</b-button
+          >
+          <b-button variant="success" pill class="ml-3" @click="submitProblem">
+            提交代码
+          </b-button>
         </div>
       </div>
     </b-card>
@@ -87,6 +91,11 @@ export default {
         { value: 'vs-dark', text: 'vs-dark' },
         { value: 'vs-light', text: 'vs-light' },
       ],
+      submitParams: {
+        code: '',
+        language: '',
+        questionID: 0,
+      },
     };
   },
   created() {
@@ -97,6 +106,14 @@ export default {
     async getProblemByID(id) {
       const { data: res } = await problemService.getProblemByID(id);
       this.problem = res.data.problem;
+    },
+    async submitProblem() {
+      this.submitParams.questionID = parseInt(sessionStorage.getItem('problem_id'), 10);
+      this.submitParams.language = this.selected1;
+      this.submitParams.code = sessionStorage.getItem('code');
+      console.log(this.submitParams);
+      const { data: res } = await problemService.submitProblem(this.submitParams);
+      console.log(res);
     },
   },
   components: {

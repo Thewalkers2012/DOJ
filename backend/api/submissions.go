@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/Thewalkers2012/DOJ/middleware"
@@ -54,5 +55,28 @@ func CreateSubmissionHandler(ctx *gin.Context) {
 		response.Response(ctx, http.StatusInternalServerError, http.StatusInternalServerError, gin.H{}, busy)
 		return
 	}
+
+}
+
+func RunCodeHandler(ctx *gin.Context) {
+	req := new(model.RunCodeParams)
+	if err := ctx.ShouldBindJSON(req); err != nil {
+		zap.L().Error("CreateSubmissionHandler with invalid param", zap.Error(err))
+
+		errs, ok := err.(validator.ValidationErrors)
+		if !ok {
+			response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, err.Error())
+		} else {
+			response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, removeTopStruct(errs.Translate(trans)))
+		}
+
+		return
+	}
+
+	fmt.Println(req)
+
+	response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{
+		"response": req,
+	}, "测试结果")
 
 }

@@ -35,6 +35,7 @@ func Setup(mode string) *gin.Engine {
 	v1.POST("/problem", middleware.JWTAuthorMiddleware(), api.CreateProblemHandler)
 	v1.GET("/problem/:id", middleware.JWTAuthorMiddleware(), api.GetProblemByIDHandler)
 	v1.GET("/problem", middleware.JWTAuthorMiddleware(), api.GetProblemList)
+	v1.POST("/submit", middleware.JWTAuthorMiddleware(), api.RunCodeHandler)
 
 	return r
 }

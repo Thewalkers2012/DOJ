@@ -21,11 +21,17 @@ type CreateProblemRequest struct {
 	DifficultyLevel string `json:"difficulty_level" binding:"required"`
 }
 
+type RunCodeParams struct {
+	QuestionsID int64  `json:"questionID"`
+	Language    string `json:"language"`
+	Code        string `json:"code"`
+}
+
 // 从前端获取的用户提交的参数
 type CreateSubmissionRequest struct {
 	UserID      int64  `json:"userID"`
 	QuestionsID int64  `json:"questionID"`
-	Language    string `json:"langueage"`
+	Language    string `json:"language"`
 	Code        string `json:"code"`
 }
 

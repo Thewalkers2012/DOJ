@@ -14,6 +14,7 @@ export default {
   data() {
     return {
       editor: null,
+      code: '',
     };
   },
   mounted() {
@@ -23,7 +24,7 @@ export default {
     initEditor() {
       this.editor = monaco.editor.create(document.getElementById('container'), {
         language: this.propLanguage,
-        value: '',
+        value: sessionStorage.getItem('code'),
         automaticLayout: true,
         theme: this.propTheme,
         selectOnLineNumbers: true,
@@ -36,9 +37,11 @@ export default {
         autoIndent: true,
         quickSuggestionsDelay: 500,
       });
-    },
-    getValue() {
-      this.editor.getValue();
+      this.editor.onKeyUp(() => {
+        // 当按下键盘，判断当前编辑器的文本与已保存的编辑器文本是否一致
+        this.code = this.editor.getValue();
+        sessionStorage.setItem('code', this.code);
+      });
     },
   },
   watch: {
