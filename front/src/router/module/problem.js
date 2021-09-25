@@ -1,6 +1,6 @@
 const problemRoutes = [
   {
-    path: '/problem',
+    path: '/problems',
     name: 'problemList',
     component: () => import('../../components/problemList.vue'),
   },

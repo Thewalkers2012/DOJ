@@ -1,5 +1,5 @@
 <template>
-  <div id="container" style="height: 600px"></div>
+  <div id="container" style="height: 800px"></div>
   <!--宽高自行设定 -->
 </template>
 
@@ -20,7 +20,6 @@ export default {
   },
   created() {
     this.problemID = sessionStorage.getItem('problem_id');
-    console.log(this.problemID);
   },
   mounted() {
     this.initEditor();

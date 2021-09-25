@@ -32,6 +32,9 @@ func GetProblemByID(pid int64) (*model.Problem, error) {
 }
 
 // GetProblemList 获取 problem 的列表
-func GetProblemList(offset, limit int) ([]*model.Problem, error) {
-	return mysql.GetProblemList(offset, limit)
+func GetProblemList(offset, limit int) ([]*model.Problem, error, int64) {
+	problems, err := mysql.GetProblemList(offset, limit)
+	total := mysql.GetProblemSize()
+
+	return problems, err, total
 }

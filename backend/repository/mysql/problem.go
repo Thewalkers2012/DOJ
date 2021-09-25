@@ -32,3 +32,9 @@ func GetProblemList(offset, limit int) ([]*model.Problem, error) {
 	err := DB.Offset(offset).Limit(limit).Find(&problems).Error
 	return problems, err
 }
+
+func GetProblemSize() int64 {
+	var count int64
+	DB.Model(&model.Problem{}).Count(&count)
+	return count
+}

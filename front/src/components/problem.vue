@@ -60,9 +60,6 @@
       <div class="d-flex mt-3 justify-content-between align-items-center">
         <div></div>
         <div>
-          <b-button variant="light" pill @click="submitProblem"
-            >调试代码</b-button
-          >
           <b-button variant="success" pill class="ml-3" @click="submitProblem">
             提交代码
           </b-button>

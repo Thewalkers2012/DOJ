@@ -1,9 +1,10 @@
 <template>
   <div class="ProblemList">
-    <div class="mt-3">
-      <h1>这里是 problemList 组件</h1>
-      <hr />
-      <b-list-group>
+    <div class="mt-3 text-center">
+      <h1>在线题库</h1>
+      <Search class="mt-3"> </Search>
+
+      <b-list-group class="mt-3">
         <b-list-group-item
           class="d-flex justify-content-between align-items-center"
         >
@@ -46,28 +47,40 @@
           </div>
         </b-list-group-item>
       </b-list-group>
+      <div class="overflow-auto mt-3">
+        <b-pagination
+          v-model="currentPage"
+          :total-rows="total"
+          :per-page="params.pageSize"
+          align="right"
+        ></b-pagination>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import problemService from '../service/problemService';
+import Search from './search/Search.vue';
 
 export default {
   data() {
     return {
       params: {
         pageNum: 1,
-        pageSize: 5,
+        pageSize: 10,
       },
       problemList: [],
       problem: {},
+      total: 100,
+      currentPage: 1,
     };
   },
   methods: {
     async getProblemList() {
       const { data: res } = await problemService.getProblemList(this.params);
       this.problemList = res.data.problems;
+      this.total = res.data.total;
     },
     async getProblemByID(id) {
       sessionStorage.setItem('problem_id', id);
@@ -75,6 +88,16 @@ export default {
   },
   created() {
     this.getProblemList();
+  },
+  components: {
+    Search,
+  },
+  watch: {
+    currentPage() {
+      this.params.pageNum = this.currentPage;
+      console.log(this.params.pageNum);
+      this.getProblemList();
+    },
   },
 };
 </script>
