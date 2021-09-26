@@ -22,17 +22,27 @@ type CreateProblemRequest struct {
 }
 
 type RunCodeParams struct {
-	QuestionsID int64  `json:"questionID"`
-	Language    string `json:"language"`
-	Code        string `json:"code"`
+	ProblemID int64  `json:"problem_id"`
+	Language  string `json:"language"`
+	Code      string `json:"code"`
 }
 
 // 从前端获取的用户提交的参数
 type CreateSubmissionRequest struct {
-	UserID      int64  `json:"userID"`
-	QuestionsID int64  `json:"questionID"`
-	Language    string `json:"language"`
-	Code        string `json:"code"`
+	UserID    int64  `json:"user_id"`
+	ProblemID int64  `json:"problem_id"`
+	Language  string `json:"language"`
+	Code      string `json:"code"`
 }
 
 // TODO: 从评测机来获取运行结果
+
+type CreateCategoryParams struct {
+	ProblemID int64  `json:"problem_id"`
+	Title     string `json:"title"`
+	Content   string `json:"content"`
+}
+
+type GetCategoryByProblemParams struct {
+	ProblemID int64 `json:"problem_id"`
+}

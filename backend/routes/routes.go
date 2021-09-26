@@ -37,5 +37,8 @@ func Setup(mode string) *gin.Engine {
 	v1.GET("/problem", middleware.JWTAuthorMiddleware(), api.GetProblemList)
 	v1.POST("/submit", middleware.JWTAuthorMiddleware(), api.RunCodeHandler)
 
+	// 文章相关
+	v1.POST("/category", middleware.JWTAuthorMiddleware(), api.CreateCategory)
+
 	return r
 }
