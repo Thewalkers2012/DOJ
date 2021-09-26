@@ -9,6 +9,11 @@ const problemRoutes = [
     name: 'problem',
     component: () => import('../../components/problem.vue'),
   },
+  {
+    path: '/problem/:id/description',
+    name: 'description',
+    component: () => import('../../components/description/Description.vue'),
+  },
 ];
 
 export default problemRoutes;
