@@ -89,7 +89,7 @@ func GetProblemList(ctx *gin.Context) {
 	offset := req.PageNum
 	limit := req.PageSize
 
-	problems, err, total := server.GetProblemList((offset-1)*limit, limit)
+	problems, total, err := server.GetProblemList((offset-1)*limit, limit)
 	if err != nil {
 		response.Response(ctx, http.StatusInternalServerError, http.StatusInternalServerError, gin.H{}, busy)
 		return

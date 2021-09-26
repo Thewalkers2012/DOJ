@@ -1,16 +1,20 @@
 package api
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/Thewalkers2012/DOJ/middleware"
 	"github.com/Thewalkers2012/DOJ/model"
 	"github.com/Thewalkers2012/DOJ/repository/mysql"
 	"github.com/Thewalkers2012/DOJ/response"
+	"github.com/Thewalkers2012/DOJ/server"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"go.uber.org/zap"
+)
+
+const (
+	GetAllSubmissionSuccess = "获取所有的提交记录成功"
 )
 
 // 返给给前端的结果
@@ -73,10 +77,40 @@ func RunCodeHandler(ctx *gin.Context) {
 		return
 	}
 
-	fmt.Printf("%v", req)
-
 	response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{
 		"response": req,
 	}, "测试结果")
+}
 
+type GetAllSubmissionsByIdAndProblemParams struct {
+	ProblemID int64 `json:"problem_id"`
+}
+
+func GetAllSubmissionsByIdAndProblem(ctx *gin.Context) {
+	// 首先获取提交代码的用户
+	studentID, _ := ctx.Get(middleware.ContextStudentIDKey)
+
+	req := new(GetAllSubmissionsByIdAndProblemParams)
+	if err := ctx.ShouldBindJSON(req); err != nil {
+		zap.L().Error("GetAllSubmissionsByIdAndProblem with invalid params", zap.Error(err))
+
+		errs, ok := err.(validator.ValidationErrors)
+		if !ok {
+			response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, err.Error())
+		} else {
+			response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, removeTopStruct(errs.Translate(trans)))
+		}
+		return
+	}
+
+	submisstions, err := server.GetAllSubmissionsByIdAndProblem(studentID.(string), req.ProblemID)
+	if err != nil {
+		zap.L().Error("server.GetAllSubmittionsByIdAndProblem failed", zap.Error(err))
+		response.Response(ctx, http.StatusInternalServerError, http.StatusInternalServerError, gin.H{}, busy)
+		return
+	}
+
+	response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{
+		"submission": submisstions,
+	}, GetAllSubmissionSuccess)
 }
