@@ -1,0 +1,344 @@
+basePath: /
+consumes:
+- application/json
+definitions:
+  Category:
+    properties:
+      author:
+        type: string
+        x-go-name: Author
+      category_id:
+        format: int64
+        type: integer
+        x-go-name: ID
+      content:
+        type: string
+        x-go-name: Content
+      create_at:
+        format: date-time
+        type: string
+        x-go-name: CreateAt
+      problem_id:
+        format: int64
+        type: integer
+        x-go-name: ProblemID
+      user_id:
+        format: int64
+        type: integer
+        x-go-name: UserID
+    type: object
+    x-go-package: github.com/Thewalkers2012/DOJ/model
+  CreateCategoryParams:
+    properties:
+      content:
+        type: string
+        x-go-name: Content
+      problemID:
+        format: int64
+        type: integer
+        x-go-name: ProblemID
+    type: object
+    x-go-package: github.com/Thewalkers2012/DOJ/model
+  CreateProblemRequest:
+    properties:
+      author:
+        type: string
+        x-go-name: Author
+      description:
+        type: string
+        x-go-name: Description
+      difficulty_level:
+        type: string
+        x-go-name: DifficultyLevel
+      memory_limit:
+        format: int64
+        type: integer
+        x-go-name: MemoryLimit
+      problem_name:
+        type: string
+        x-go-name: Name
+      test_case:
+        type: string
+        x-go-name: TestCase
+      time_limit:
+        format: int64
+        type: integer
+        x-go-name: TimeLimit
+    type: object
+    x-go-package: github.com/Thewalkers2012/DOJ/model
+  CreateUserRequest:
+    description: create user request
+    properties:
+      password:
+        type: string
+        x-go-name: Password
+      studentID:
+        type: string
+        x-go-name: StudentID
+      username:
+        type: string
+        x-go-name: Username
+    type: object
+    x-go-package: github.com/Thewalkers2012/DOJ/model
+  CreateUserResponse:
+    description: create user response
+    properties:
+      studentID:
+        type: string
+        x-go-name: StudentID
+      username:
+        type: string
+        x-go-name: Username
+    type: object
+    x-go-package: github.com/Thewalkers2012/DOJ/model
+  GetCategoryByProblemParams:
+    properties:
+      ProblemID:
+        format: int64
+        type: integer
+    type: object
+    x-go-package: github.com/Thewalkers2012/DOJ/model
+  ListProblemRequest:
+    properties:
+      PageNum:
+        format: int64
+        type: integer
+      PageSize:
+        format: int64
+        type: integer
+    type: object
+    x-go-package: github.com/Thewalkers2012/DOJ/model
+  LoginRequest:
+    description: login request
+    properties:
+      password:
+        type: string
+        x-go-name: Password
+      studentID:
+        type: string
+        x-go-name: StudentID
+    type: object
+    x-go-package: github.com/Thewalkers2012/DOJ/model
+  LoginResponse:
+    description: login response
+    properties:
+      access_token:
+        type: string
+        x-go-name: AccessToekn
+      user:
+        $ref: '#/definitions/CreateUserResponse'
+    type: object
+    x-go-package: github.com/Thewalkers2012/DOJ/model
+  Problem:
+    properties:
+      author:
+        type: string
+        x-go-name: Author
+      description:
+        type: string
+        x-go-name: Description
+      difficulty_level:
+        type: string
+        x-go-name: DifficultyLevel
+      memory_limit:
+        format: int64
+        type: integer
+        x-go-name: MemoryLimit
+      problem_id:
+        format: int64
+        type: integer
+        x-go-name: ID
+      problem_name:
+        type: string
+        x-go-name: Name
+      test_case:
+        type: string
+        x-go-name: TestCase
+      time_limit:
+        format: int64
+        type: integer
+        x-go-name: TimeLimit
+    type: object
+    x-go-package: github.com/Thewalkers2012/DOJ/model
+  User:
+    properties:
+      create_at:
+        format: date-time
+        type: string
+        x-go-name: CreateAt
+      hashed_password:
+        type: string
+        x-go-name: HashedPassword
+      student_id:
+        type: string
+        x-go-name: StudentID
+      user_id:
+        format: int64
+        type: integer
+        x-go-name: ID
+      username:
+        type: string
+        x-go-name: Username
+    type: object
+    x-go-package: github.com/Thewalkers2012/DOJ/model
+host: localhost:9090
+info:
+  description: Documentation of our DOJ API.
+  title: DOJ.
+  version: 0.1.0
+paths:
+  /api/v1/category:
+    get:
+      description: 通过题目的编号来获取题目的信息
+      operationId: GetCategoryByProblem
+      parameters:
+      - description: This text will appear as description of your request body.
+        in: body
+        name: Body
+        schema:
+          $ref: '#/definitions/GetCategoryByProblemParams'
+      responses:
+        "200":
+          $ref: '#/responses/GetCategoryByProblem'
+      tags:
+      - category
+    post:
+      description: 创建题目
+      operationId: CreateCategory
+      parameters:
+      - description: This text will appear as description of your request body.
+        in: body
+        name: Body
+        schema:
+          $ref: '#/definitions/CreateCategoryParams'
+      responses:
+        "200":
+          $ref: '#/responses/CreateCategory'
+      tags:
+      - category
+  /api/v1/info:
+    get:
+      description: 用户信息
+      operationId: InfoHandler
+      responses:
+        "200":
+          $ref: '#/responses/InfoHandler'
+      tags:
+      - user
+  /api/v1/login:
+    post:
+      description: 用户登录
+      operationId: LoginHandler
+      parameters:
+      - description: This text will appear as description of your request body.
+        in: body
+        name: Body
+        schema:
+          $ref: '#/definitions/LoginRequest'
+      responses:
+        "200":
+          $ref: '#/responses/LoginHandler'
+      tags:
+      - user
+  /api/v1/problem:
+    get:
+      description: 获取题目列表
+      operationId: GetProblemList
+      parameters:
+      - description: This text will appear as description of your request body.
+        in: body
+        name: Body
+        schema:
+          $ref: '#/definitions/ListProblemRequest'
+      responses:
+        "200":
+          $ref: '#/responses/GetProblemList'
+      tags:
+      - problem
+    post:
+      description: 创建题目
+      operationId: CreateProblemHandler
+      parameters:
+      - description: This text will appear as description of your request body.
+        in: body
+        name: Body
+        schema:
+          $ref: '#/definitions/CreateProblemRequest'
+      responses:
+        "200":
+          $ref: '#/responses/CreateProblemHandler'
+      tags:
+      - problem
+  /api/v1/problem/{id}:
+    post:
+      description: 通过题目的编号来获取题目的信息
+      operationId: GetProblemByIDHandler
+      parameters:
+      - description: This text will appear as description of your request body.
+        in: path
+        name: id
+        required: true
+        type: string
+        x-go-name: Id
+      responses:
+        "200":
+          $ref: '#/responses/GetProblemByIDHandler'
+      tags:
+      - problem
+  /api/v1/register:
+    post:
+      description: 用户注册
+      operationId: SignUpHandler
+      parameters:
+      - description: This text will appear as description of your request body.
+        in: body
+        name: Body
+        schema:
+          $ref: '#/definitions/CreateUserRequest'
+      responses:
+        "200":
+          $ref: '#/responses/SignUpHandler'
+      tags:
+      - user
+produces:
+- application/json
+responses:
+  CreateCategory:
+    description: ""
+    schema:
+      $ref: '#/definitions/Category'
+  CreateProblemHandler:
+    description: ""
+    schema:
+      $ref: '#/definitions/Problem'
+  GetCategoryByProblem:
+    description: ""
+    schema:
+      $ref: '#/definitions/Category'
+  GetProblemByIDHandler:
+    description: ""
+    schema:
+      $ref: '#/definitions/Problem'
+  GetProblemList:
+    description: ""
+    schema:
+      $ref: '#/definitions/Problem'
+  InfoHandler:
+    description: ""
+    schema:
+      $ref: '#/definitions/User'
+  LoginHandler:
+    description: ""
+    schema:
+      $ref: '#/definitions/LoginResponse'
+  SignUpHandler:
+    description: ""
+    schema:
+      $ref: '#/definitions/CreateUserResponse'
+schemes:
+- http
+- https
+securityDefinitions:
+  basic:
+    type: basic
+swagger: "2.0"

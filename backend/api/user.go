@@ -9,6 +9,7 @@ import (
 	"github.com/Thewalkers2012/DOJ/repository/mysql"
 	"github.com/Thewalkers2012/DOJ/response"
 	"github.com/Thewalkers2012/DOJ/server"
+	_ "github.com/Thewalkers2012/DOJ/swagger/docs"
 	"github.com/Thewalkers2012/DOJ/util"
 	"github.com/Thewalkers2012/DOJ/util/jwt"
 	"github.com/gin-gonic/gin"
@@ -23,21 +24,9 @@ const (
 	infoSuccessful     = "获取用户信息成功"
 )
 
-// create user request
-type createUserRequest struct {
-	Username  string `json:"username" binding:"required"`
-	Password  string `json:"password" binding:"required,min=6"`
-	StudentID string `json:"studentID" binding:"required"`
-}
-
-// create user response
-type createUserResponse struct {
-	Username  string `json:"username"`
-	StudentID string `json:"studentID"`
-}
-
+// User SignUp
 func SignUpHandler(ctx *gin.Context) {
-	req := new(createUserRequest)
+	req := new(model.CreateUserRequest)
 	if err := ctx.ShouldBindJSON(req); err != nil {
 		zap.L().Error("Sign up Handler with invalid param", zap.Error(err))
 
@@ -79,7 +68,7 @@ func SignUpHandler(ctx *gin.Context) {
 		response.Response(ctx, http.StatusInternalServerError, http.StatusInternalServerError, gin.H{}, busy)
 	}
 
-	res := createUserResponse{
+	res := model.CreateUserResponse{
 		Username:  user.Username,
 		StudentID: user.StudentID,
 	}
@@ -90,20 +79,9 @@ func SignUpHandler(ctx *gin.Context) {
 	}, registerSuccessful)
 }
 
-// login request
-type loginRequest struct {
-	StudentID string `json:"studentID" binding:"required"`
-	Password  string `json:"password" binding:"required"`
-}
-
-// login response
-type loginResponse struct {
-	AccessToekn string             `json:"access_token"`
-	User        createUserResponse `json:"user"`
-}
-
+// User Login
 func LoginHandler(ctx *gin.Context) {
-	req := new(loginRequest)
+	req := new(model.LoginRequest)
 	// 1. 校验数据
 	if err := ctx.ShouldBindJSON(req); err != nil {
 		zap.L().Error("Login Handler with invalid param", zap.Error(err))
@@ -138,8 +116,8 @@ func LoginHandler(ctx *gin.Context) {
 		return
 	}
 
-	res := loginResponse{
-		User: createUserResponse{
+	res := model.LoginResponse{
+		User: model.CreateUserResponse{
 			Username:  user.Username,
 			StudentID: user.StudentID,
 		},
@@ -151,6 +129,7 @@ func LoginHandler(ctx *gin.Context) {
 	}, loginSuccessful)
 }
 
+// User Info
 func InfoHandler(ctx *gin.Context) {
 	studentID, _ := ctx.Get(middleware.ContextStudentIDKey)
 

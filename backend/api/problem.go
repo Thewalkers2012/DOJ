@@ -8,6 +8,7 @@ import (
 	"github.com/Thewalkers2012/DOJ/model"
 	"github.com/Thewalkers2012/DOJ/response"
 	"github.com/Thewalkers2012/DOJ/server"
+	_ "github.com/Thewalkers2012/DOJ/swagger/docs"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"go.uber.org/zap"
@@ -21,6 +22,7 @@ const (
 	getProblemListSuccess   = "获取问题列表成功"
 )
 
+// Create Problem
 func CreateProblemHandler(ctx *gin.Context) {
 	req := new(model.CreateProblemRequest)
 	if err := ctx.ShouldBindJSON(req); err != nil {
@@ -42,6 +44,7 @@ func CreateProblemHandler(ctx *gin.Context) {
 	}, createProblemSuccessful)
 }
 
+// Get Problem By ID
 func GetProblemByIDHandler(ctx *gin.Context) {
 	// 获取参数
 	pidStr := ctx.Param("id")
@@ -67,13 +70,8 @@ func GetProblemByIDHandler(ctx *gin.Context) {
 	}, getProblemSuccess)
 }
 
-type listProblemRequest struct {
-	PageNum  int `form:"pageNum" binding:"required,min=1"`
-	PageSize int `form:"pageSize" binding:"required,min=5,max=10"`
-}
-
 func GetProblemList(ctx *gin.Context) {
-	req := new(listProblemRequest)
+	req := new(model.ListProblemRequest)
 	if err := ctx.ShouldBindQuery(req); err != nil {
 		zap.L().Error("api.GetProblem failed", zap.Error(err))
 

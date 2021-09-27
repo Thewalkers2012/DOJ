@@ -8,7 +8,10 @@
         <b-list-group-item
           class="d-flex justify-content-between align-items-center"
         >
-          <div>题目名称</div>
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="mr-5">#</div>
+            <div>题目名称</div>
+          </div>
           <div class="d-flex">
             <div>通过率</div>
             <div class="ml-5">难度</div>
@@ -24,8 +27,13 @@
             $router.push(`/problem/${item.problem_id}`);
           "
         >
-          <div>
-            {{ item.problem_name }}
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="mr-5">
+              {{ item.problem_id }}
+            </div>
+            <div>
+              {{ item.problem_name }}
+            </div>
           </div>
           <div class="d-flex">
             <div>100%</div>

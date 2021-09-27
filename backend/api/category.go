@@ -7,6 +7,7 @@ import (
 	"github.com/Thewalkers2012/DOJ/model"
 	"github.com/Thewalkers2012/DOJ/response"
 	"github.com/Thewalkers2012/DOJ/server"
+	_ "github.com/Thewalkers2012/DOJ/swagger/docs"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"go.uber.org/zap"
@@ -17,6 +18,7 @@ const (
 	CreateCategorySuccess       = "创建讨论成功"
 )
 
+// Create Category
 func CreateCategory(ctx *gin.Context) {
 	studentID, _ := ctx.Get(middleware.ContextStudentIDKey)
 	req := new(model.CreateCategoryParams)
@@ -44,6 +46,7 @@ func CreateCategory(ctx *gin.Context) {
 	}, CreateCategorySuccess)
 }
 
+// Get Category By Problem ID
 func GetCategoryByProblem(ctx *gin.Context) {
 	req := new(model.GetCategoryByProblemParams)
 	if err := ctx.ShouldBindQuery(req); err != nil {
