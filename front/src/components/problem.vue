@@ -21,14 +21,15 @@
       <!-- description -->
       <router-view></router-view>
       <Description v-if="description"></Description>
+      <Category v-else-if="talk"></Category>
     </b-card>
   </div>
 </template>
 
 <script>
 import problemService from '../service/problemService';
-// import Edit from './edit/Edit.vue';
 import Description from './description/Description.vue';
+import Category from './talk/Talk.vue';
 
 export default {
   data() {
@@ -66,6 +67,7 @@ export default {
   },
   components: {
     Description,
+    Category,
   },
 };
 </script>

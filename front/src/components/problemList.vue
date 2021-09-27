@@ -95,7 +95,6 @@ export default {
   watch: {
     currentPage() {
       this.params.pageNum = this.currentPage;
-      console.log(this.params.pageNum);
       this.getProblemList();
     },
   },

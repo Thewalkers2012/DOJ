@@ -46,7 +46,7 @@ func CreateCategory(ctx *gin.Context) {
 
 func GetCategoryByProblem(ctx *gin.Context) {
 	req := new(model.GetCategoryByProblemParams)
-	if err := ctx.ShouldBindJSON(req); err != nil {
+	if err := ctx.ShouldBindQuery(req); err != nil {
 		zap.L().Error("CreateCategory failed", zap.Error(err))
 		errs, ok := err.(validator.ValidationErrors)
 		if !ok {
