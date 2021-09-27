@@ -14,15 +14,13 @@ func createRandomCategory(t *testing.T) (*model.Category, error) {
 
 	params := &model.CreateCategoryParams{
 		ProblemID: problem.ID,
-		Title:     random.RandomStringWithLetter(10),
 		Content:   random.RandomStringWithLetter(50),
 	}
 
-	category, err := CreateCategory(params, user.ID)
+	category, err := CreateCategory(params, user.ID, user.Username)
 	assert.NoError(t, err)
 	assert.Equal(t, category.UserID, user.ID)
 	assert.Equal(t, category.ProblemID, problem.ID)
-	assert.Equal(t, params.Title, category.Title)
 	assert.Equal(t, params.Content, category.Content)
 
 	return category, err

@@ -1,16 +1,18 @@
 package mysql
 
-import "github.com/Thewalkers2012/DOJ/model"
+import (
+	"github.com/Thewalkers2012/DOJ/model"
+)
 
-func CreateCategory(req *model.CreateCategoryParams, userID int64) (*model.Category, error) {
+func CreateCategory(req *model.CreateCategoryParams, userID int64, username string) (*model.Category, error) {
 	category := &model.Category{
 		UserID:    userID,
 		ProblemID: req.ProblemID,
-		Title:     req.Title,
 		Content:   req.Content,
+		Author:    username,
 	}
 
-	err := DB.Create(&category).Error
+	err := DB.Select("UserID", "ProblemID", "Content", "Author").Create(category).Error
 
 	return category, err
 }

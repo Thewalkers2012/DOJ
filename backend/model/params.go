@@ -39,7 +39,6 @@ type CreateSubmissionRequest struct {
 
 type CreateCategoryParams struct {
 	ProblemID int64  `json:"problemID"`
-	Title     string `json:"title" binding:"required"`
 	Content   string `json:"content" binding:"required"`
 }
 

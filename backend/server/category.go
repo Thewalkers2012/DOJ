@@ -11,7 +11,7 @@ func CreateCategory(req *model.CreateCategoryParams, studentID string) (*model.C
 		return nil, err
 	}
 
-	return mysql.CreateCategory(req, user.ID)
+	return mysql.CreateCategory(req, user.ID, user.Username)
 }
 
 func GetCategoryByProblem(problemID int64) ([]*model.Category, error) {

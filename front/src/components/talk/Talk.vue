@@ -2,15 +2,6 @@
   <div class="mt-3">
     <h4>评论</h4>
     <div>
-      <b-row>
-        <b-col md="4" lg="4" sm="4">
-          <b-form-input
-            v-model="createParams.title"
-            placeholder="题目"
-            class="mt-3"
-          ></b-form-input>
-        </b-col>
-      </b-row>
       <div class="mt-3">
         <b-form-textarea
           id="textarea-large"
@@ -42,7 +33,7 @@
       class="mt-3"
     >
       <b-card>
-        <h5>{{ item.title }}</h5>
+        <h5>作者：{{ item.author }}</h5>
         <b-card-text> {{ item.content }} </b-card-text>
       </b-card>
     </b-overlay>
@@ -57,7 +48,6 @@ export default {
     return {
       createParams: {
         problemID: 0,
-        title: '',
         content: '',
       },
       getParams: {
@@ -77,15 +67,6 @@ export default {
       this.categories = res.data.categories;
     },
     async createCategoryByProblem() {
-      if (this.createParams.title.length === 0) {
-        this.$bvToast.toast('题目不能为空', {
-          title: '评论失败',
-          variant: 'danger',
-          solid: true,
-        });
-        return;
-      }
-
       if (this.createParams.content.length === 0) {
         this.$bvToast.toast('内容不能为空', {
           title: '评论失败',
@@ -100,6 +81,7 @@ export default {
       this.createParams.title = '';
       this.createParams.content = '';
       this.category = res.data.category;
+      this.getCategoryByProblem();
     },
   },
 };
