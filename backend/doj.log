@@ -1,3 +1,0 @@
-{"level":"INFO","time":"2021-09-27T21:27:17.228+0800","caller":"backend/main.go:75","msg":"Shutdown Server ..."}
-{"level":"INFO","time":"2021-09-27T21:27:17.229+0800","caller":"backend/main.go:83","msg":"Server exiting"}
-{"level":"DEBUG","time":"2021-09-28T20:57:04.834+0800","caller":"backend/main.go:35","msg":"logger init success ..."}
