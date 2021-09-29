@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/Thewalkers2012/DOJ/middleware"
@@ -8,6 +9,7 @@ import (
 	"github.com/Thewalkers2012/DOJ/repository/mysql"
 	"github.com/Thewalkers2012/DOJ/response"
 	"github.com/Thewalkers2012/DOJ/server"
+	"github.com/Thewalkers2012/DOJ/util/judge"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"go.uber.org/zap"
@@ -62,6 +64,14 @@ func CreateSubmissionHandler(ctx *gin.Context) {
 
 }
 
+// func printSliceData(slice []*judge.Data) {
+// 	fmt.Print("[\n")
+// 	for _, item := range slice {
+// 		fmt.Printf("\t%#v,\n", item)
+// 	}
+// 	fmt.Print("]\n")
+// }
+
 func RunCodeHandler(ctx *gin.Context) {
 	req := new(model.RunCodeParams)
 	if err := ctx.ShouldBindJSON(req); err != nil {
@@ -74,6 +84,25 @@ func RunCodeHandler(ctx *gin.Context) {
 			response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, removeTopStruct(errs.Translate(trans)))
 		}
 
+		return
+	}
+
+	// 将数据传送给 Client 然后 Client 再将结果放回给 后端
+	client := judge.NewClient(judge.WithTimeout(0))
+	client.SetOptions(judge.WithEndpointURL("http://127.0.0.1:12358"), judge.WithToken("YOUR_TOKEN_HERE"))
+	resp, err := client.JudgeWithRequest(&judge.JudgeRequest{
+		Src:            req.Code,
+		LanguageConfig: judge.CPPLangConfig,
+		MaxCpuTime:     1000,
+		MaxMemory:      128 * 1024 * 1024,
+		TestCaseId:     "normal",
+	})
+
+	fmt.Println("运行时间：", resp.SliceData()[0].CpuTime)
+	fmt.Println("运行结果：", resp.SliceData()[0].ExitCode)
+	fmt.Println("使用内存：", resp.SliceData()[0].Memory)
+	if err != nil {
+		fmt.Println(err.Error())
 		return
 	}
 
