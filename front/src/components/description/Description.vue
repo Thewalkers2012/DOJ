@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- 题目描述区域 -->
     <div>
       <div class="mt-3">
         <h3 style="font-weight: bold">题目描述：</h3>
@@ -57,6 +58,7 @@
 <script>
 import problemService from '../../service/problemService';
 import Edit from '../edit/Edit.vue';
+// import getSubmitMsg from '../../helper/getAnswer';
 
 export default {
   data() {
@@ -79,6 +81,7 @@ export default {
         questionID: 0,
       },
       id: '',
+      submitMsg: '',
     };
   },
   created() {
@@ -95,9 +98,21 @@ export default {
       this.submitParams.questionID = parseInt(sessionStorage.getItem('problem_id'), 10);
       this.submitParams.language = this.selected1;
       this.submitParams.code = localStorage.getItem(`code_${this.submitParams.questionID}`);
-      console.log(this.submitParams);
       const { data: res } = await problemService.submitProblem(this.submitParams);
-      console.log(res);
+
+      if (res.data.data.answer_code === 0) {
+        this.submitMsg = 'Accept';
+      } else if (res.data.data.answer_code === -1) {
+        this.submitMsg = 'Wrong Answer';
+      } else if (res.data.data.answer_code === 1) {
+        this.submitMsg = 'Time Limit Exceeded';
+      } else if (res.data.data.answer_code === 4) {
+        this.submitMsg = 'RunTime Error';
+      } else {
+        this.submitMsg = 'Compile Error';
+      }
+
+      console.log(this.submitMsg);
     },
   },
   components: {

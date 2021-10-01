@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/Thewalkers2012/DOJ/middleware"
@@ -17,6 +16,12 @@ import (
 
 const (
 	GetAllSubmissionSuccess = "获取所有的提交记录成功"
+	SubmitSuccess           = "提交成功"
+	Accept                  = 0
+	WrongAnswer             = -1
+	TimeLimitExceeded       = 1
+	RunTimeError            = 4
+	CompileError            = 6
 )
 
 // 返给给前端的结果
@@ -64,14 +69,6 @@ func CreateSubmissionHandler(ctx *gin.Context) {
 
 }
 
-// func printSliceData(slice []*judge.Data) {
-// 	fmt.Print("[\n")
-// 	for _, item := range slice {
-// 		fmt.Printf("\t%#v,\n", item)
-// 	}
-// 	fmt.Print("]\n")
-// }
-
 func RunCodeHandler(ctx *gin.Context) {
 	req := new(model.RunCodeParams)
 	if err := ctx.ShouldBindJSON(req); err != nil {
@@ -87,28 +84,30 @@ func RunCodeHandler(ctx *gin.Context) {
 		return
 	}
 
-	// 将数据传送给 Client 然后 Client 再将结果放回给 后端
-	client := judge.NewClient(judge.WithTimeout(0))
-	client.SetOptions(judge.WithEndpointURL("http://127.0.0.1:12358"), judge.WithToken("YOUR_TOKEN_HERE"))
-	resp, err := client.JudgeWithRequest(&judge.JudgeRequest{
-		Src:            req.Code,
-		LanguageConfig: judge.CPPLangConfig,
-		MaxCpuTime:     1000,
-		MaxMemory:      128 * 1024 * 1024,
-		TestCaseId:     "normal",
-	})
+	// 将数据传送给 Client 然后 Client 将 Json 结果返回给后端，再由后端返回给前端
+	resp := judge.SubmitCode(req.Code, req.Language, 1000, 128*1024*1024, "normal")
 
-	fmt.Println("运行时间：", resp.SliceData()[0].CpuTime)
-	fmt.Println("运行结果：", resp.SliceData()[0].ExitCode)
-	fmt.Println("使用内存：", resp.SliceData()[0].Memory)
-	if err != nil {
-		fmt.Println(err.Error())
+	// 编译错误
+	if resp.Err() != nil {
+		response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{
+			"data": model.ResponseSubmit{
+				AnswerCode: CompileError,
+				Time:       0,
+				Memory:     0,
+			},
+		}, resp.Err().Error())
 		return
 	}
 
+	res := resp.SliceData()[0]
+
 	response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{
-		"response": req,
-	}, "测试结果")
+		"data": model.ResponseSubmit{
+			AnswerCode: res.Result,
+			Time:       res.RealTime,
+			Memory:     res.Memory,
+		},
+	}, SubmitSuccess)
 }
 
 type GetAllSubmissionsByIdAndProblemParams struct {

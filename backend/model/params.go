@@ -69,6 +69,12 @@ type RunCodeParams struct {
 	Code      string `json:"code"`
 }
 
+type ResponseSubmit struct {
+	AnswerCode int   `json:"answer_code"`
+	Time       int   `json:"time"`
+	Memory     int64 `json:"memory"`
+}
+
 // 从前端获取的用户提交的参数
 type CreateSubmissionRequest struct {
 	UserID    int64  `json:"user_id"`
