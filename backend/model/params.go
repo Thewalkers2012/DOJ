@@ -75,14 +75,6 @@ type ResponseSubmit struct {
 	Memory     int64 `json:"memory"`
 }
 
-// 从前端获取的用户提交的参数
-type CreateSubmissionRequest struct {
-	UserID    int64  `json:"user_id"`
-	ProblemID int64  `json:"problemID"`
-	Language  string `json:"language"`
-	Code      string `json:"code"`
-}
-
 // TODO: 从评测机来获取运行结果
 
 /*

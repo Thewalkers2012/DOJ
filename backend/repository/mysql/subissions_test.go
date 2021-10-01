@@ -13,8 +13,7 @@ func createRandomSubmission(t *testing.T) {
 	user := CreateUser(createRandomUser(t))
 	problem := createRandomProblem(t)
 
-	params := &model.CreateSubmissionRequest{
-		UserID:    user.ID,
+	params := &model.RunCodeParams{
 		ProblemID: problem.ID,
 		Language:  random.RandomLanguage(),
 		Code:      random.RandomStringWithLetter(50),
@@ -22,12 +21,12 @@ func createRandomSubmission(t *testing.T) {
 
 	score, result := int(random.RandomInt(0, 100)), random.RandomAnswer()
 
-	submission, err := CreateSubmission(params, score, result)
+	submission, err := CreateSubmission(params, user.ID, score, result)
 	assert.NoError(t, err)
 	assert.Equal(t, submission.Code, params.Code)
 	assert.Equal(t, submission.Language, params.Language)
 	assert.Equal(t, submission.ProblemID, params.ProblemID)
-	assert.Equal(t, submission.UserID, params.UserID)
+	assert.Equal(t, submission.UserID, user.ID)
 	assert.Equal(t, submission.Score, score)
 	assert.Equal(t, submission.Result, judge.GetAnswerMsg(result))
 	assert.NotZero(t, submission.ID)

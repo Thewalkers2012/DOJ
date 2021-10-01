@@ -21,9 +21,9 @@ type Submissions struct {
 	Code        string `json:"code"`
 }
 
-func CreateSubmission(sub *model.CreateSubmissionRequest, score int, result int) (*model.Submission, error) {
+func CreateSubmission(sub *model.RunCodeParams, userID int64, score int, result int) (*model.Submission, error) {
 	submission := &model.Submission{
-		UserID:    sub.UserID,
+		UserID:    userID,
 		ProblemID: sub.ProblemID,
 		Language:  sub.Language,
 		Code:      sub.Code,

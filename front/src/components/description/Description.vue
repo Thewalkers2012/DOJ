@@ -108,7 +108,7 @@ export default {
       submitParams: {
         code: '',
         language: '',
-        questionID: 0,
+        problemID: 0,
       },
       id: '',
       submitMsg: '',
@@ -131,9 +131,9 @@ export default {
       this.submitMsg = 'Judging';
       this.finish = false;
       this.showMsg = true;
-      this.submitParams.questionID = parseInt(sessionStorage.getItem('problem_id'), 10);
+      this.submitParams.problemID = parseInt(sessionStorage.getItem('problem_id'), 10);
       this.submitParams.language = this.selected1;
-      this.submitParams.code = localStorage.getItem(`code_${this.submitParams.questionID}`);
+      this.submitParams.code = localStorage.getItem(`code_${this.submitParams.problemID}`);
     },
     endSubmit(codeValue, msg) {
       // 提交的信息的颜色

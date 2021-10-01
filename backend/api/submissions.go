@@ -23,15 +23,10 @@ const (
 	CompileError            = 6
 )
 
-// 返给给前端的结果
-type SubmissionResponse struct {
-	Score   int    `json:"score"`
-	Result  string `json:"result"`
-	Message string `json:"message"`
-}
-
 func RunCodeHandler(ctx *gin.Context) {
+	studentID, _ := ctx.Get(middleware.ContextStudentIDKey)
 	req := new(model.RunCodeParams)
+
 	if err := ctx.ShouldBindJSON(req); err != nil {
 		zap.L().Error("CreateSubmissionHandler with invalid param", zap.Error(err))
 
@@ -48,10 +43,16 @@ func RunCodeHandler(ctx *gin.Context) {
 	// 将数据传送给 Client 然后 Client 将 Json 结果返回给后端，再由后端返回给前端
 	resp := judge.SubmitCode(req.Code, req.Language, 1000, 128*1024*1024, "normal")
 
-	// 将提交结果保存到数据库中
-
 	// 编译错误
 	if resp.Err() != nil {
+		_, err := server.CreateSubmission(req, studentID.(string), 10, 6)
+
+		if err != nil {
+			zap.L().Error("server.CreateSubmission failed", zap.Error(err))
+			response.Response(ctx, http.StatusInternalServerError, http.StatusInternalServerError, gin.H{}, busy)
+			return
+		}
+
 		response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{
 			"data": model.ResponseSubmit{
 				AnswerCode: CompileError,
@@ -63,6 +64,14 @@ func RunCodeHandler(ctx *gin.Context) {
 	}
 
 	res := resp.SliceData()[0]
+
+	// 将提交结果保存到数据库中
+	_, err := server.CreateSubmission(req, studentID.(string), 10, res.Result)
+	if err != nil {
+		zap.L().Error("server.CreateSubmission failed", zap.Error(err))
+		response.Response(ctx, http.StatusInternalServerError, http.StatusInternalServerError, gin.H{}, busy)
+		return
+	}
 
 	response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{
 		"data": model.ResponseSubmit{
