@@ -1,11 +1,11 @@
 package model
 
-type Submissions struct {
-	ID          int64  `json:"submissionID"`
-	UserID      int64  `json:"userID"`
-	QuestionsID int64  `json:"questionID"`
-	Language    string `json:"langueage"`
-	Score       int    `json:"score"`
-	Result      string `json:"result"`
-	Code        string `json:"code"`
+type Submission struct {
+	ID        int64  `json:"submission_id"`
+	UserID    int64  `json:"user_id"`
+	ProblemID int64  `json:"problem_id"`
+	Language  string `json:"langueage"`
+	Score     int    `json:"score"`
+	Result    string `json:"result"`
+	Code      string `json:"code"`
 }

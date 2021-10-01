@@ -62,6 +62,7 @@
     <!-- 点击 Submit 按钮，然后会显示提交代码显示的信息 -->
     <b-card class="mt-3" v-if="showMsg" border-variant="Secondary">
       <div class="d-flex align-items-center">
+        <!-- 代码提交的状态 -->
         <h3>代码提交状态：</h3>
         <h3 class="ml-1" :style="{ color: color }">{{ submitMsg }}</h3>
         <b-spinner
@@ -70,6 +71,16 @@
           v-if="submitMsg === 'Judging'"
         ></b-spinner>
       </div>
+      <!-- 编译错误的提示信息 -->
+      <b-alert
+        show
+        variant="danger"
+        class="mt-3"
+        v-if="submitMsg === 'Compile Error'"
+      >
+        <h5>错误信息</h5>
+        <pre>{{ compileMsg }}</pre>
+      </b-alert>
     </b-card>
   </div>
 </template>
@@ -105,6 +116,7 @@ export default {
       color: '', // 显示 Message 的显示
       finish: false,
       showMsg: false, // 控制显示信息
+      compileMsg: '', // 显示编译错误信息
     };
   },
   created() {
@@ -123,7 +135,7 @@ export default {
       this.submitParams.language = this.selected1;
       this.submitParams.code = localStorage.getItem(`code_${this.submitParams.questionID}`);
     },
-    endSubmit(codeValue) {
+    endSubmit(codeValue, msg) {
       // 提交的信息的颜色
       if (codeValue === 0) {
         this.color = 'darkgreen';
@@ -142,6 +154,7 @@ export default {
         this.submitMsg = 'RunTime Error';
       } else {
         this.submitMsg = 'Compile Error';
+        this.compileMsg = msg;
       }
 
       this.finish = true;
@@ -154,7 +167,7 @@ export default {
     async submitProblem() {
       this.startSubmit();
       const { data: res } = await problemService.submitProblem(this.submitParams);
-      this.endSubmit(res.data.data.answer_code);
+      this.endSubmit(res.data.data.answer_code, res.msg);
     },
   },
   components: {
@@ -162,9 +175,3 @@ export default {
   },
 };
 </script>
-
-<style>
-.xx {
-  background-color: dodgerblue;
-}
-</style>

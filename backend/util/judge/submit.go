@@ -28,3 +28,17 @@ func getConfig(language string) *LangConfig {
 	}
 	return PY2LangConfig
 }
+
+func GetAnswerMsg(code int) string {
+	if code == 0 {
+		return "Accept"
+	} else if code == -1 {
+		return "Wrong Answer"
+	} else if code == 1 {
+		return "Time Limit Exceeded"
+	} else if code == 4 {
+		return "RunTime Error"
+	} else {
+		return "Compile Error"
+	}
+}

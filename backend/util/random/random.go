@@ -6,6 +6,12 @@ import (
 	"time"
 )
 
+// Accept                  = 0
+// WrongAnswer             = -1
+// TimeLimitExceeded       = 1
+// RunTimeError            = 4
+// CompileError            = 6
+
 const alphabet = "abcdefghijklmnopqrstuvwxyz"
 const number = "0123456789"
 
@@ -75,5 +81,27 @@ func RandomDiffcultyLevel() string {
 		return middle
 	} else {
 		return difficulty
+	}
+}
+
+// RandomAnswer generate a random answer
+func RandomAnswer() int {
+	state := []int{-1, 0, 1, 4, 6}
+
+	k := len(state)
+	code := state[RandomInt(0, int64(k-1))]
+
+	return code
+}
+
+// RandomLanguage generate a random language
+func RandomLanguage() string {
+	k := RandomInt(0, 2)
+	if k == 0 {
+		return "cpp"
+	} else if k == 1 {
+		return "java"
+	} else {
+		return "python"
 	}
 }

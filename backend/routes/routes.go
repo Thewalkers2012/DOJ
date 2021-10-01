@@ -35,11 +35,13 @@ func Setup(mode string) *gin.Engine {
 	v1.POST("/problem", middleware.JWTAuthorMiddleware(), api.CreateProblemHandler)
 	v1.GET("/problem/:id", middleware.JWTAuthorMiddleware(), api.GetProblemByIDHandler)
 	v1.GET("/problem", middleware.JWTAuthorMiddleware(), api.GetProblemList)
-	v1.POST("/submit", middleware.JWTAuthorMiddleware(), api.RunCodeHandler)
 
 	// 文章相关
 	v1.POST("/category", middleware.JWTAuthorMiddleware(), api.CreateCategory)
 	v1.GET("/category", middleware.JWTAuthorMiddleware(), api.GetCategoryByProblem)
+
+	// 提交题目相关路由
+	v1.POST("/submit", middleware.JWTAuthorMiddleware(), api.RunCodeHandler)
 
 	return r
 }
