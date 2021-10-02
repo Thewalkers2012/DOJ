@@ -7,7 +7,7 @@ type Submission struct {
 	Memory    int64  `json:"memory"`
 	Time      int    `json:"time"`
 	Score     int    `json:"score"`
-	Language  string `json:"langueage"`
+	Language  string `json:"language"`
 	Result    string `json:"result"`
 	Code      string `json:"code"`
 	CreatedAt Time   `json:"created_at"`
