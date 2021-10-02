@@ -37,3 +37,16 @@ func CreateSubmission(req *model.RunCodeParams, userID int64, sub *model.SubmitR
 
 	return submission, err
 }
+
+func GetPersonSolved(userID int64) (int64, error) {
+	var count int64
+	err := DB.Model(&model.Submission{}).Where("user_id = ? AND result = ?", userID, "accept").Distinct("problem_id").Count(&count).Error
+	return count, err
+}
+
+// GetPersonSubmission
+func GetPersonSubmission(userID int64) (int64, error) {
+	var count int64
+	err := DB.Model(&model.Submission{}).Where("user_id = ?", userID).Count(&count).Error
+	return count, err
+}

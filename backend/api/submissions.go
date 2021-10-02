@@ -14,6 +14,7 @@ import (
 )
 
 const (
+	OK                      = "ok"
 	GetAllSubmissionSuccess = "获取所有的提交记录成功"
 	SubmitSuccess           = "提交成功"
 	Accept                  = 0
@@ -125,4 +126,36 @@ func GetAllSubmissionsByIdAndProblem(ctx *gin.Context) {
 	response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{
 		"submission": submisstions,
 	}, GetAllSubmissionSuccess)
+}
+
+// 获取用户的解题数目
+func GetPersonSolved(ctx *gin.Context) {
+	studentID, _ := ctx.Get(middleware.ContextStudentIDKey)
+
+	solvedSum, err := server.GetPersonSolved(studentID.(string))
+	if err != nil {
+		zap.L().Error("server.GetPersonSolved failed", zap.Error(err))
+		response.Response(ctx, http.StatusInternalServerError, http.StatusInternalServerError, gin.H{}, busy)
+		return
+	}
+
+	response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{
+		"total": solvedSum,
+	}, OK)
+}
+
+// 获取单个用户的提交总数
+func GetPersonSubmission(ctx *gin.Context) {
+	studentID, _ := ctx.Get(middleware.ContextStudentIDKey)
+
+	solvedSum, err := server.GetPersonSubmission(studentID.(string))
+	if err != nil {
+		zap.L().Error("server.GetPersonSubmission failed", zap.Error(err))
+		response.Response(ctx, http.StatusInternalServerError, http.StatusInternalServerError, gin.H{}, busy)
+		return
+	}
+
+	response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{
+		"total": solvedSum,
+	}, OK)
 }

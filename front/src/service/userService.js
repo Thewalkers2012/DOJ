@@ -9,8 +9,16 @@ const login = ({ studentID, password }) => request.post('login', { studentID, pa
 // 获取用户信息
 const info = () => request.get('info');
 
+// 获取 AC 题目数量
+const solved = () => request.get('solved');
+
+// 获取提交总数
+const submissionCount = () => request.get('submit_count');
+
 export default {
   register,
   info,
   login,
+  solved,
+  submissionCount,
 };

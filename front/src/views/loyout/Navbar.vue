@@ -19,10 +19,14 @@
               <template v-slot:button-content>
                 <em>{{ userInfo.username }}</em>
               </template>
-              <b-dropdown-item @click="$router.push({ name: 'profile' })"
-                >个人主页</b-dropdown-item
+              <b-dropdown-item @click="$router.push({ name: 'profile' })">
+                <b-icon icon="person-fill"></b-icon
+                ><span class="ml-3">个人主页</span></b-dropdown-item
               >
-              <b-dropdown-item @click="logout">登出</b-dropdown-item>
+              <b-dropdown-item @click="logout"
+                ><b-icon icon="power" aria-hidden="true"></b-icon
+                ><span class="ml-3">登出</span></b-dropdown-item
+              >
             </b-nav-item-dropdown>
             <!-- <div v-if="!userInfo"> -->
             <b-nav-item

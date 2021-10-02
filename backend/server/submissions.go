@@ -22,3 +22,21 @@ func GetAllSubmissionsByIdAndProblem(studentID string, problemID int64) ([]*mode
 
 	return mysql.GetAllSubmissionsByIdAndProblem(user.ID, problemID)
 }
+
+func GetPersonSolved(studentID string) (int64, error) {
+	user, err := mysql.GetUser(studentID)
+	if err != nil {
+		return -1, err
+	}
+
+	return mysql.GetPersonSolved(user.ID)
+}
+
+func GetPersonSubmission(studentID string) (int64, error) {
+	user, err := mysql.GetUser(studentID)
+	if err != nil {
+		return -1, err
+	}
+
+	return mysql.GetPersonSubmission(user.ID)
+}
