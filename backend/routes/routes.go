@@ -42,6 +42,7 @@ func Setup(mode string) *gin.Engine {
 
 	// 提交题目相关路由
 	v1.POST("/submit", middleware.JWTAuthorMiddleware(), api.RunCodeHandler)
+	v1.GET("/submission", middleware.JWTAuthorMiddleware(), api.GetAllSubmissionsByIdAndProblem)
 
 	return r
 }

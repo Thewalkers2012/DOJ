@@ -69,9 +69,10 @@ type RunCodeParams struct {
 	Code      string `json:"code"`
 }
 
-type ResponseSubmit struct {
+type SubmitResult struct {
 	AnswerCode int   `json:"answer_code"`
 	Time       int   `json:"time"`
+	Score      int   `json:"score"`
 	Memory     int64 `json:"memory"`
 }
 

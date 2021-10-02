@@ -22,6 +22,7 @@
       <router-view></router-view>
       <Description v-if="description"></Description>
       <Category v-else-if="talk"></Category>
+      <Submissions v-else> </Submissions>
     </b-card>
   </div>
 </template>
@@ -29,6 +30,7 @@
 <script>
 import problemService from '../service/problemService';
 import Description from './description/Description.vue';
+import Submissions from './submissions/Submissions.vue';
 import Category from './talk/Talk.vue';
 
 export default {
@@ -68,6 +70,7 @@ export default {
   components: {
     Description,
     Category,
+    Submissions,
   },
 };
 </script>

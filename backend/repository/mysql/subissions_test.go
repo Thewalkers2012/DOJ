@@ -19,16 +19,23 @@ func createRandomSubmission(t *testing.T) {
 		Code:      random.RandomStringWithLetter(50),
 	}
 
-	score, result := int(random.RandomInt(0, 100)), random.RandomAnswer()
+	sub := &model.SubmitResult{
+		AnswerCode: random.RandomAnswer(),
+		Score:      int(random.RandomInt(0, 100)),
+		Time:       int(random.RandomInt(0, 1000)),
+		Memory:     random.RandomInt(0, 1000),
+	}
 
-	submission, err := CreateSubmission(params, user.ID, score, result)
+	submission, err := CreateSubmission(params, user.ID, sub)
 	assert.NoError(t, err)
 	assert.Equal(t, submission.Code, params.Code)
 	assert.Equal(t, submission.Language, params.Language)
 	assert.Equal(t, submission.ProblemID, params.ProblemID)
 	assert.Equal(t, submission.UserID, user.ID)
-	assert.Equal(t, submission.Score, score)
-	assert.Equal(t, submission.Result, judge.GetAnswerMsg(result))
+	assert.Equal(t, submission.Score, sub.Score)
+	assert.Equal(t, submission.Result, judge.GetAnswerMsg(sub.AnswerCode))
+	assert.Equal(t, submission.Time, sub.Time)
+	assert.Equal(t, submission.Memory, sub.Memory)
 	assert.NotZero(t, submission.ID)
 }
 

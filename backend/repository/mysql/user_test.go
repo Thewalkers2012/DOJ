@@ -48,6 +48,10 @@ func TestGetUser(t *testing.T) {
 	user := createRandomUser(t)
 	u1 := CreateUser(user)
 	u2, err := GetUser(u1.StudentID)
+
 	assert.NoError(t, err)
-	assert.Equal(t, u1, u2)
+	assert.Equal(t, u1.HashedPassword, u2.HashedPassword)
+	assert.Equal(t, u1.ID, u2.ID)
+	assert.Equal(t, u1.StudentID, u2.StudentID)
+	assert.Equal(t, u1.Username, u2.Username)
 }

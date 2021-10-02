@@ -41,11 +41,16 @@ func RunCodeHandler(ctx *gin.Context) {
 	}
 
 	// 将数据传送给 Client 然后 Client 将 Json 结果返回给后端，再由后端返回给前端
-	resp := judge.SubmitCode(req.Code, req.Language, 1000, 128*1024*1024, "normal")
+	resp := judge.SubmitCode(req.Code, req.Language, 1000, 64*1024*1024, "normal")
 
 	// 编译错误
 	if resp.Err() != nil {
-		_, err := server.CreateSubmission(req, studentID.(string), 10, 6)
+		_, err := server.CreateSubmission(req, studentID.(string), &model.SubmitResult{
+			AnswerCode: 6,
+			Time:       0,
+			Memory:     0,
+			Score:      0,
+		})
 
 		if err != nil {
 			zap.L().Error("server.CreateSubmission failed", zap.Error(err))
@@ -54,10 +59,11 @@ func RunCodeHandler(ctx *gin.Context) {
 		}
 
 		response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{
-			"data": model.ResponseSubmit{
+			"data": model.SubmitResult{
 				AnswerCode: CompileError,
 				Time:       0,
 				Memory:     0,
+				Score:      10,
 			},
 		}, resp.Err().Error())
 		return
@@ -66,7 +72,12 @@ func RunCodeHandler(ctx *gin.Context) {
 	res := resp.SliceData()[0]
 
 	// 将提交结果保存到数据库中
-	_, err := server.CreateSubmission(req, studentID.(string), 10, res.Result)
+	_, err := server.CreateSubmission(req, studentID.(string), &model.SubmitResult{
+		AnswerCode: res.Result,
+		Time:       res.RealTime,
+		Memory:     res.Memory / 1024,
+		Score:      100,
+	})
 	if err != nil {
 		zap.L().Error("server.CreateSubmission failed", zap.Error(err))
 		response.Response(ctx, http.StatusInternalServerError, http.StatusInternalServerError, gin.H{}, busy)
@@ -74,16 +85,17 @@ func RunCodeHandler(ctx *gin.Context) {
 	}
 
 	response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{
-		"data": model.ResponseSubmit{
+		"data": model.SubmitResult{
 			AnswerCode: res.Result,
 			Time:       res.RealTime,
 			Memory:     res.Memory,
+			Score:      10,
 		},
 	}, SubmitSuccess)
 }
 
 type GetAllSubmissionsByIdAndProblemParams struct {
-	ProblemID int64 `json:"problem_id"`
+	ProblemID int64 `form:"problemID"`
 }
 
 func GetAllSubmissionsByIdAndProblem(ctx *gin.Context) {
@@ -91,7 +103,7 @@ func GetAllSubmissionsByIdAndProblem(ctx *gin.Context) {
 	studentID, _ := ctx.Get(middleware.ContextStudentIDKey)
 
 	req := new(GetAllSubmissionsByIdAndProblemParams)
-	if err := ctx.ShouldBindJSON(req); err != nil {
+	if err := ctx.ShouldBindQuery(req); err != nil {
 		zap.L().Error("GetAllSubmissionsByIdAndProblem with invalid params", zap.Error(err))
 
 		errs, ok := err.(validator.ValidationErrors)

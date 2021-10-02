@@ -7,7 +7,7 @@ import (
 
 func GetAllSubmissionsByIdAndProblem(userID, problemID int64) ([]*model.Submission, error) {
 	submissions := []*model.Submission{}
-	err := DB.Where("user_id = ? && question_id = ?").Find(&submissions).Error
+	err := DB.Where("user_id = ? && problem_id = ?", userID, problemID).Find(&submissions).Error
 	return submissions, err
 }
 
@@ -21,17 +21,19 @@ type Submissions struct {
 	Code        string `json:"code"`
 }
 
-func CreateSubmission(sub *model.RunCodeParams, userID int64, score int, result int) (*model.Submission, error) {
+func CreateSubmission(req *model.RunCodeParams, userID int64, sub *model.SubmitResult) (*model.Submission, error) {
 	submission := &model.Submission{
 		UserID:    userID,
-		ProblemID: sub.ProblemID,
-		Language:  sub.Language,
-		Code:      sub.Code,
-		Result:    judge.GetAnswerMsg(result),
-		Score:     score,
+		ProblemID: req.ProblemID,
+		Language:  req.Language,
+		Code:      req.Code,
+		Result:    judge.GetAnswerMsg(sub.AnswerCode),
+		Score:     sub.Score,
+		Time:      sub.Time,
+		Memory:    sub.Memory,
 	}
 
-	err := DB.Select("UserID", "ProblemID", "Language", "Code", "Score", "Result").Create(submission).Error
+	err := DB.Select("UserID", "ProblemID", "Language", "Code", "Score", "Result", "Time", "Memory").Create(submission).Error
 
 	return submission, err
 }
