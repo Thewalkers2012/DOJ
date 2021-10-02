@@ -22,7 +22,8 @@ CREATE TABLE `submissions` (
   `language` varchar(255) NOT NULL,
   `score` bigint NOT NULL,
   `result` varchar(255) NOT NULL,
-  `code` text NOT NULL
+  `code` text NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT (now())
 );
 CREATE TABLE `categories` (
   `id` bigint PRIMARY KEY AUTO_INCREMENT,

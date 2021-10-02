@@ -33,7 +33,10 @@
       class="mt-3"
     >
       <b-card>
-        <h5>作者：{{ item.author }}</h5>
+        <div class="d-flex mt-3 justify-content-between align-items-center">
+          <h5>{{ item.author }}</h5>
+          <h5 class="mt-3">{{ item.create_at }}</h5>
+        </div>
         <b-card-text> {{ item.content }} </b-card-text>
       </b-card>
     </b-overlay>

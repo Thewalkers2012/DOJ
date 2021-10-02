@@ -8,4 +8,5 @@ type Submission struct {
 	Score     int    `json:"score"`
 	Result    string `json:"result"`
 	Code      string `json:"code"`
+	CreatedAt Time   `json:"created_at"`
 }
