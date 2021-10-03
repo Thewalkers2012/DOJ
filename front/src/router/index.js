@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import store from '../store';
 import Home from '../views/Home.vue';
+import adminRoutes from './module/admin';
 import problemRoutes from './module/problem';
 import userRoutes from './module/user';
 
@@ -20,6 +21,7 @@ const routes = [
   },
   ...userRoutes,
   ...problemRoutes,
+  ...adminRoutes,
 ];
 
 const router = new VueRouter({

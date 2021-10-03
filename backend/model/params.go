@@ -40,6 +40,12 @@ type LoginResponse struct {
 	User        CreateUserResponse `json:"user"`
 }
 
+// GetUserListParams
+type GetUserListParams struct {
+	PageNum  int `form:"pageNum" binding:"required,min=1"`
+	PageSize int `form:"pageSize" binding:"required,min=5,max=10"`
+}
+
 /*
 * 与 Problem 相关的请求参数
  */

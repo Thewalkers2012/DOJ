@@ -59,3 +59,11 @@ func Login(arg *model.LoginParams) (token string, user *model.User, err error) {
 
 	return token, user, nil
 }
+
+// GetUserList
+func GetUserList(offset, limit int) ([]*model.User, int64, error) {
+	users, err := mysql.GetUserList(offset, limit)
+	total := mysql.GetUserSize()
+
+	return users, total, err
+}

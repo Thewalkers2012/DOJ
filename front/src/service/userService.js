@@ -1,5 +1,8 @@
 import request from '../utils/request';
 
+// 用户列表
+const userList = ({ pageSize, pageNum }) => request.get('user', { params: { pageNum, pageSize } });
+
 // 用户注册
 const register = ({ studentID, username, password }) => request.post('register', { studentID, username, password });
 
@@ -21,4 +24,5 @@ export default {
   login,
   solved,
   submissionCount,
+  userList,
 };

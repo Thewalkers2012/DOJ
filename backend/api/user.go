@@ -145,3 +145,33 @@ func InfoHandler(ctx *gin.Context) {
 		"user": user,
 	}, infoSuccessful)
 }
+
+// User List
+func GetUserList(ctx *gin.Context) {
+	req := new(model.GetUserListParams)
+	if err := ctx.ShouldBindQuery(req); err != nil {
+		zap.L().Error("api.GetProblem failed", zap.Error(err))
+
+		errs, ok := err.(validator.ValidationErrors)
+		if !ok {
+			response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, err.Error())
+		} else {
+			response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, removeTopStruct(errs.Translate(trans)))
+		}
+		return
+	}
+
+	offset := req.PageNum
+	limit := req.PageSize
+
+	users, total, err := server.GetUserList((offset-1)*limit, limit)
+	if err != nil {
+		response.Response(ctx, http.StatusInternalServerError, http.StatusInternalServerError, gin.H{}, busy)
+		return
+	}
+
+	response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{
+		"users": users,
+		"total": total,
+	}, getProblemListSuccess)
+}
