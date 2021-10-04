@@ -17,13 +17,15 @@
         <div></div>
       </div>
       <hr />
-      <UserAdmin></UserAdmin>
+      <UserAdmin v-if="isUser"></UserAdmin>
+      <CategoryAdmin v-else-if="isCategory"></CategoryAdmin>
     </b-card>
   </div>
 </template>
 
 <script>
 import UserAdmin from '../../components/userAdmin/UserAdmin.vue';
+import CategoryAdmin from '../../components/categoryAdmin/CategoryAdmin.vue';
 
 export default {
   name: 'Admin',
@@ -63,6 +65,7 @@ export default {
   },
   components: {
     UserAdmin,
+    CategoryAdmin,
   },
 };
 </script>

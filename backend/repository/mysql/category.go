@@ -22,3 +22,15 @@ func GetCategoryByProblem(problem int64) ([]*model.Category, error) {
 	err := DB.Where("problem_id = ?", problem).Find(&categories).Error
 	return categories, err
 }
+
+func GetAllCategories(offset, limit int) ([]*model.Category, error) {
+	categories := []*model.Category{}
+	err := DB.Offset(offset).Limit(limit).Find(&categories).Error
+	return categories, err
+}
+
+func GetCategoriySize() (int64, error) {
+	var count int64
+	err := DB.Model(&model.Category{}).Count(&count).Error
+	return count, err
+}

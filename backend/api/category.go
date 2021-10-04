@@ -16,6 +16,7 @@ import (
 const (
 	GetCategoryByProblemSuccess = "获取题目讨论成功"
 	CreateCategorySuccess       = "创建讨论成功"
+	GetAllCategoriesSuccess     = "获取所有文章成功"
 )
 
 // Create Category
@@ -72,4 +73,35 @@ func GetCategoryByProblem(ctx *gin.Context) {
 	response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{
 		"categories": categories,
 	}, GetCategoryByProblemSuccess)
+}
+
+func GetAllCategories(ctx *gin.Context) {
+	req := new(model.GetAllCategoriesParams)
+	if err := ctx.ShouldBindQuery(req); err != nil {
+		zap.L().Error("api.GetAllCategories failed", zap.Error(err))
+		errs, ok := err.(validator.ValidationErrors)
+		if !ok {
+			response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, err.Error())
+		} else {
+			response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, removeTopStruct(errs.Translate(trans)))
+		}
+
+		return
+	}
+
+	offset := req.PageNum
+	limit := req.PageSize
+
+	categories, total, err := server.GetAllCategories((offset-1)*limit, limit)
+	if err != nil {
+		zap.L().Error("server.GetAllCategories failed", zap.Error(err))
+
+		response.Response(ctx, http.StatusInternalServerError, http.StatusInternalServerError, gin.H{}, busy)
+		return
+	}
+
+	response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{
+		"categories": categories,
+		"total":      total,
+	}, GetAllCategoriesSuccess)
 }

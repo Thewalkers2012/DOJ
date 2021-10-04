@@ -118,3 +118,9 @@ type CreateCategoryParams struct {
 type GetCategoryByProblemParams struct {
 	ProblemID int64 `form:"problemID"`
 }
+
+// GetAllCategories Params
+type GetAllCategoriesParams struct {
+	PageNum  int `form:"pageNum" binding:"required,min=1"`
+	PageSize int `form:"pageSize" binding:"required,min=5,max=10"`
+}
