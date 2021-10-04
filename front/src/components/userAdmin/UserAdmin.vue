@@ -40,6 +40,17 @@
         </form>
       </b-modal>
       <!-- 修改角色结束 -->
+      <!-- 显示角色详细信息的开始 -->
+      <b-modal id="user_details" size="lg" title="用户详情">
+        <h5>学号：{{ user.studentID }}</h5>
+        <hr />
+        <h5>用户名：{{ user.username }}</h5>
+        <hr />
+        <h5>提交总数：{{ user.acceptCount }}</h5>
+        <hr />
+        <h5>解决问题总数：{{ user.submissionCount }}</h5>
+      </b-modal>
+      <!-- 显示角色具体信息的结束 -->
       <b-table
         striped
         hover
@@ -54,6 +65,7 @@
               variant="primary"
               @click="detailsUser(data.value)"
               size="sm"
+              v-b-modal.user_details
             >
               详情
             </b-button>
@@ -105,6 +117,10 @@ export default {
         { key: 'user_id', label: '操作' },
       ],
       users: [],
+      // 获取用户详细信息相关
+      detailsParams: {
+        userID: '',
+      },
       // 更改用户相关
       updateParams: {
         username: '',
@@ -173,11 +189,13 @@ export default {
     },
     // 删除角色相关
     deleteUser(id) {
-      sessionStorage.setItem('deleteUserID', id);
+      console.log(id);
     },
     // 角色细节
-    detailsUser(id) {
-      sessionStorage.setItem('detailsUserID', id);
+    async detailsUser(id) {
+      this.detailsParams.userID = id;
+      const { data: res } = await userService.getUserDetails(this.detailsParams);
+      this.user = res.data.userDetail;
     },
   },
   created() {

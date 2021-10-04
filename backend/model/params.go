@@ -52,8 +52,11 @@ type UpdateUserParams struct {
 	StudentID string `json:"studentID"`
 }
 
-// Update And Delete And Details Params
 type UserParams struct {
+	UserID int64 `form:"userID"`
+}
+
+type DeleteUserParams struct {
 	UserID int64 `form:"userID"`
 }
 

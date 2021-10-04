@@ -43,3 +43,8 @@ func UpdateUser(u *model.User) (*model.User, error) {
 	err := DB.Save(&u).Error
 	return u, err
 }
+
+func DeleteUser(userID int64) error {
+	err := DB.Delete(&model.User{}, userID).Error
+	return err
+}

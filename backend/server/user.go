@@ -111,3 +111,7 @@ func GetUserDetails(userID int64) (*model.UserDetailResponse, error) {
 		SubmissionCount: submissionCount,
 	}, nil
 }
+
+func DeteleUser(userID int64) error {
+	return mysql.DeleteUser(userID)
+}

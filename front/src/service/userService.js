@@ -21,6 +21,9 @@ const submissionCount = () => request.get('submit_count');
 // 修改角色信息
 const updateUser = ({ userID, username, studentID }) => request.put('user', { userID, username, studentID });
 
+// 获取用户的详细信息
+const getUserDetails = ({ userID }) => request.get('user_detail', { params: { userID } });
+
 export default {
   register,
   info,
@@ -29,4 +32,5 @@ export default {
   submissionCount,
   userList,
   updateUser,
+  getUserDetails,
 };
