@@ -46,6 +46,25 @@ type GetUserListParams struct {
 	PageSize int `form:"pageSize" binding:"required,min=5,max=10"`
 }
 
+type UpdateUserParams struct {
+	UserID    int64  `json:"userID"`
+	Username  string `json:"username"`
+	StudentID string `json:"studentID"`
+}
+
+// Update And Delete And Details Params
+type UserParams struct {
+	UserID int64 `form:"userID"`
+}
+
+type UserDetailResponse struct {
+	UserID          int64  `json:"userID"`
+	AcceptCount     int64  `json:"acceptCount"`
+	SubmissionCount int64  `json:"submissionCount"`
+	Username        string `json:"username"`
+	StudentID       string `json:"studentID"`
+}
+
 /*
 * 与 Problem 相关的请求参数
  */

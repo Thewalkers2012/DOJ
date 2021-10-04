@@ -7,6 +7,7 @@ import (
 	"github.com/Thewalkers2012/DOJ/repository/mysql"
 	"github.com/Thewalkers2012/DOJ/util"
 	"github.com/Thewalkers2012/DOJ/util/jwt"
+	"go.uber.org/zap"
 	"gorm.io/gorm"
 )
 
@@ -66,4 +67,47 @@ func GetUserList(offset, limit int) ([]*model.User, int64, error) {
 	total := mysql.GetUserSize()
 
 	return users, total, err
+}
+
+// UpdateUser
+func UpdateUser(req *model.UpdateUserParams) (*model.User, error) {
+	user, err := mysql.GetUserByID(req.UserID)
+	if err != nil {
+		zap.L().Error("mysql.GetUserByID failed", zap.Error(err))
+		return nil, err
+	}
+
+	user.StudentID = req.StudentID
+	user.Username = req.Username
+
+	return mysql.UpdateUser(user)
+}
+
+// GetUserDetails
+func GetUserDetails(userID int64) (*model.UserDetailResponse, error) {
+	user, err := mysql.GetUserByID(userID)
+	if err != nil {
+		zap.L().Error("mysql.GetUserByID failed", zap.Error(err))
+		return nil, err
+	}
+
+	accept, err := mysql.GetPersonSolved(userID)
+	if err != nil {
+		zap.L().Error("mysql.GetPersonSolved failed", zap.Error(err))
+		return nil, err
+	}
+
+	submissionCount, err := mysql.GetPersonSubmission(userID)
+	if err != nil {
+		zap.L().Error("mysql.GetPersonSubmission failed", zap.Error(err))
+		return nil, err
+	}
+
+	return &model.UserDetailResponse{
+		UserID:          userID,
+		Username:        user.Username,
+		StudentID:       user.StudentID,
+		AcceptCount:     accept,
+		SubmissionCount: submissionCount,
+	}, nil
 }

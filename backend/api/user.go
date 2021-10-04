@@ -18,10 +18,12 @@ import (
 )
 
 const (
-	busy               = "服务器繁忙"
-	registerSuccessful = "注册成功"
-	loginSuccessful    = "登录成功"
-	infoSuccessful     = "获取用户信息成功"
+	busy                  = "服务器繁忙"
+	registerSuccessful    = "注册成功"
+	loginSuccessful       = "登录成功"
+	infoSuccessful        = "获取用户信息成功"
+	updateSuccess         = "更新成功"
+	getUserDetailsSuccess = "获取用户详情成功"
 )
 
 // User SignUp
@@ -174,4 +176,55 @@ func GetUserList(ctx *gin.Context) {
 		"users": users,
 		"total": total,
 	}, getProblemListSuccess)
+}
+
+// Update User
+func UpdateUser(ctx *gin.Context) {
+	req := new(model.UpdateUserParams)
+	if err := ctx.ShouldBindJSON(req); err != nil {
+		zap.L().Error("api.UpdateUser failed", zap.Error(err))
+
+		errs, ok := err.(validator.ValidationErrors)
+		if !ok {
+			response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, err.Error())
+		} else {
+			response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, removeTopStruct(errs.Translate(trans)))
+		}
+		return
+	}
+
+	user, err := server.UpdateUser(req)
+	if err != nil {
+		response.Response(ctx, http.StatusInternalServerError, http.StatusInternalServerError, gin.H{}, busy)
+		return
+	}
+
+	response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{
+		"user": user,
+	}, updateSuccess)
+}
+
+func GetUserDetails(ctx *gin.Context) {
+	req := new(model.UserParams)
+	if err := ctx.ShouldBindQuery(req); err != nil {
+		zap.L().Error("api.GetUserDetails failed", zap.Error(err))
+
+		errs, ok := err.(validator.ValidationErrors)
+		if !ok {
+			response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, err.Error())
+		} else {
+			response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, removeTopStruct(errs.Translate(trans)))
+		}
+		return
+	}
+
+	userDetails, err := server.GetUserDetails(req.UserID)
+	if err != nil {
+		response.Response(ctx, http.StatusInternalServerError, http.StatusInternalServerError, gin.H{}, busy)
+		return
+	}
+
+	response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{
+		"userDetail": userDetails,
+	}, getUserDetailsSuccess)
 }

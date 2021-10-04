@@ -55,3 +55,19 @@ func TestGetUser(t *testing.T) {
 	assert.Equal(t, u1.StudentID, u2.StudentID)
 	assert.Equal(t, u1.Username, u2.Username)
 }
+
+func TestUpdateUser(t *testing.T) {
+	user := createRandomUser(t)
+	u1 := CreateUser(user)
+
+	username := random.RandomUserName()
+	studentID := random.RandomStringWithNumber(10)
+	u1.Username = username
+	u1.StudentID = studentID
+
+	u2, err := UpdateUser(u1)
+	assert.NoError(t, err)
+	assert.Equal(t, u1.ID, u2.ID)
+	assert.Equal(t, u2.Username, u1.Username)
+	assert.Equal(t, u2.StudentID, u1.StudentID)
+}

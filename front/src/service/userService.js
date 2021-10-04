@@ -18,6 +18,9 @@ const solved = () => request.get('solved');
 // 获取提交总数
 const submissionCount = () => request.get('submit_count');
 
+// 修改角色信息
+const updateUser = ({ userID, username, studentID }) => request.put('user', { userID, username, studentID });
+
 export default {
   register,
   info,
@@ -25,4 +28,5 @@ export default {
   solved,
   submissionCount,
   userList,
+  updateUser,
 };

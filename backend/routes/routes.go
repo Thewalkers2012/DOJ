@@ -31,6 +31,8 @@ func Setup(mode string) *gin.Engine {
 	v1.POST("/login", api.LoginHandler)
 	v1.GET("/info", middleware.JWTAuthorMiddleware(), api.InfoHandler)
 	v1.GET("/user", middleware.JWTAuthorMiddleware(), api.GetUserList)
+	v1.PUT("/user", middleware.JWTAuthorMiddleware(), api.UpdateUser)
+	v1.GET("/user_detail", middleware.JWTAuthorMiddleware(), api.GetUserDetails)
 
 	// 题目相关的业务
 	v1.POST("/problem", middleware.JWTAuthorMiddleware(), api.CreateProblemHandler)

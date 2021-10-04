@@ -21,6 +21,12 @@ func GetUser(StudentID string) (*model.User, error) {
 	return user, err
 }
 
+func GetUserByID(id int64) (*model.User, error) {
+	user := new(model.User)
+	err := DB.Where("id = ?", id).First(&user).Error
+	return user, err
+}
+
 func GetUserList(offset, limit int) ([]*model.User, error) {
 	users := []*model.User{}
 	err := DB.Offset(offset).Limit(limit).Find(&users).Error
@@ -31,4 +37,9 @@ func GetUserSize() int64 {
 	var total int64
 	DB.Model(&model.User{}).Count(&total)
 	return total
+}
+
+func UpdateUser(u *model.User) (*model.User, error) {
+	err := DB.Save(&u).Error
+	return u, err
 }
