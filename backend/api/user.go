@@ -232,7 +232,7 @@ func GetUserDetails(ctx *gin.Context) {
 
 func DeleteUserHandler(ctx *gin.Context) {
 	req := new(model.DeleteUserParams)
-	if err := ctx.ShouldBindJSON(req); err != nil {
+	if err := ctx.ShouldBindQuery(req); err != nil {
 		zap.L().Error("api.DeleteUserHandler failed", zap.Error(err))
 
 		errs, ok := err.(validator.ValidationErrors)

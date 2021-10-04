@@ -24,6 +24,9 @@ const updateUser = ({ userID, username, studentID }) => request.put('user', { us
 // 获取用户的详细信息
 const getUserDetails = ({ userID }) => request.get('user_detail', { params: { userID } });
 
+// 删除角色
+const deleteUser = ({ userID }) => request.delete('user', { params: { userID } });
+
 export default {
   register,
   info,
@@ -33,4 +36,5 @@ export default {
   userList,
   updateUser,
   getUserDetails,
+  deleteUser,
 };
