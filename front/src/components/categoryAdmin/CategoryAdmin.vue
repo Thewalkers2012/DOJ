@@ -1,5 +1,12 @@
 <template>
   <div class="mt-3">
+    <!-- 显示文章的详细信息的对话框 -->
+    <b-modal id="category_details" size="lg" title="文章详情">
+      <h5>作者：{{ dCategory.author }}</h5>
+      <hr />
+      <pre>{{ dCategory.content }}</pre>
+    </b-modal>
+    <!-- 显示文章详细信息对话框结束 -->
     <b-table
       striped
       hover
@@ -14,14 +21,14 @@
             variant="primary"
             @click="detailsCategory(data.value)"
             size="sm"
-            v-b-modal.user_details
+            v-b-modal.category_details
           >
             详情
           </b-button>
           <!-- 显示删除 -->
           <b-button
             variant="danger"
-            @click="deleteCategory(data.value)"
+            @click="deleteCategory1(data.value)"
             size="sm"
             class="ml-3"
           >
@@ -62,6 +69,16 @@ export default {
         { key: 'create_at', label: '创建时间' },
         { key: 'category_id', label: '操作' },
       ],
+      // 删除文章相关
+      deleteCategory: {},
+      deleteParams: {
+        categoryID: 1,
+      },
+      // 细节相关
+      detailsCategoryParams: {
+        categoryID: 1,
+      },
+      dCategory: {},
     };
   },
   methods: {
@@ -71,11 +88,22 @@ export default {
       this.total = res.data.total;
       this.categories = res.data.categories;
     },
-    deleteCategory(id) {
-      console.log(id);
+    async deleteCategory1(id) {
+      this.deleteParams.categoryID = id;
+      const { data: res } = await categoryService.deleteCategory(this.deleteParams);
+      if (res.code === 200) {
+        this.$bvToast.toast('删除角色成功', {
+          title: '删除成功',
+          variant: 'success',
+          solid: true,
+        });
+      }
+      this.getCategoryList();
     },
-    detailsCategory(id) {
-      console.log(id);
+    async detailsCategory(id) {
+      this.detailsCategoryParams.categoryID = id;
+      const { data: res } = await categoryService.getCategoryDetails(this.detailsCategoryParams);
+      this.dCategory = res.data.category;
     },
   },
   created() {

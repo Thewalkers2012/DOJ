@@ -9,8 +9,16 @@ const getCategoryByProblem = ({ problemID }) => request.get('category', { params
 // 获取所有的文章
 const getAllCategories = ({ pageNum, pageSize }) => request.get('category_list', { params: { pageNum, pageSize } });
 
+// 获取单个文章的细节
+const getCategoryDetails = ({ categoryID }) => request.get('category_details', { params: { categoryID } });
+
+// 删除单个文章
+const deleteCategory = ({ categoryID }) => request.delete('category', { params: { categoryID } });
+
 export default {
   createCategory,
   getCategoryByProblem,
   getAllCategories,
+  getCategoryDetails,
+  deleteCategory,
 };
