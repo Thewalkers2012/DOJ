@@ -1,6 +1,7 @@
 package api
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/Thewalkers2012/DOJ/middleware"
@@ -11,12 +12,16 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"go.uber.org/zap"
+	"gorm.io/gorm"
 )
 
 const (
 	GetCategoryByProblemSuccess = "获取题目讨论成功"
 	CreateCategorySuccess       = "创建讨论成功"
 	GetAllCategoriesSuccess     = "获取所有文章成功"
+	GetCategorySuceess          = "获取文章成功"
+	DeleteCategorySuccessful    = "删除文章成功"
+	CategoryNotFound            = "文章没有找到"
 )
 
 // Create Category
@@ -104,4 +109,62 @@ func GetAllCategories(ctx *gin.Context) {
 		"categories": categories,
 		"total":      total,
 	}, GetAllCategoriesSuccess)
+}
+
+func GetCategoryDetails(ctx *gin.Context) {
+	req := new(model.CategoryParams)
+	if err := ctx.ShouldBindQuery(req); err != nil {
+		zap.L().Error("api.GetAllCategories failed", zap.Error(err))
+		errs, ok := err.(validator.ValidationErrors)
+		if !ok {
+			response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, err.Error())
+		} else {
+			response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, removeTopStruct(errs.Translate(trans)))
+		}
+
+		return
+	}
+
+	category, err := server.GetCategoryDetails(req.CategoryID)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			response.Response(ctx, http.StatusNotFound, http.StatusNotFound, gin.H{}, CategoryNotFound)
+			return
+		}
+		zap.L().Error("server.GetCategoryDetails failed", zap.Error(err))
+		response.Response(ctx, http.StatusInternalServerError, http.StatusInternalServerError, gin.H{}, busy)
+		return
+	}
+
+	response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{
+		"category": category,
+	}, GetCategorySuceess)
+}
+
+func DeleteCategory(ctx *gin.Context) {
+	req := new(model.CategoryParams)
+	if err := ctx.ShouldBindQuery(req); err != nil {
+		zap.L().Error("api.GetAllCategories failed", zap.Error(err))
+		errs, ok := err.(validator.ValidationErrors)
+		if !ok {
+			response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, err.Error())
+		} else {
+			response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, removeTopStruct(errs.Translate(trans)))
+		}
+
+		return
+	}
+
+	err := server.DeleteCategory(req.CategoryID)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			response.Response(ctx, http.StatusNotFound, http.StatusNotFound, gin.H{}, CategoryNotFound)
+			return
+		}
+		zap.L().Error("server.DeleteCategory failed", zap.Error(err))
+		response.Response(ctx, http.StatusInternalServerError, http.StatusInternalServerError, gin.H{}, busy)
+		return
+	}
+
+	response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{}, DeleteCategorySuccessful)
 }

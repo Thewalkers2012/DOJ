@@ -124,3 +124,8 @@ type GetAllCategoriesParams struct {
 	PageNum  int `form:"pageNum" binding:"required,min=1"`
 	PageSize int `form:"pageSize" binding:"required,min=5,max=10"`
 }
+
+// DeleteCategory And GetCategoryDetails
+type CategoryParams struct {
+	CategoryID int64 `form:"categoryID"`
+}

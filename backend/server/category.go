@@ -33,3 +33,11 @@ func GetAllCategories(offset, limit int) ([]*model.Category, int64, error) {
 
 	return categories, total, nil
 }
+
+func GetCategoryDetails(id int64) (*model.Category, error) {
+	return mysql.GetCategoryByID(id)
+}
+
+func DeleteCategory(id int64) error {
+	return mysql.DeleteCategory(id)
+}

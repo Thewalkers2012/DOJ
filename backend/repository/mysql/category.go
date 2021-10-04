@@ -34,3 +34,14 @@ func GetCategoriySize() (int64, error) {
 	err := DB.Model(&model.Category{}).Count(&count).Error
 	return count, err
 }
+
+func GetCategoryByID(id int64) (*model.Category, error) {
+	category := new(model.Category)
+	err := DB.Where("id = ?", id).First(&category).Error
+	return category, err
+}
+
+func DeleteCategory(id int64) error {
+	err := DB.Delete(&model.Category{}, id).Error
+	return err
+}

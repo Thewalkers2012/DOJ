@@ -44,6 +44,8 @@ func Setup(mode string) *gin.Engine {
 	v1.POST("/category", middleware.JWTAuthorMiddleware(), api.CreateCategory)
 	v1.GET("/category", middleware.JWTAuthorMiddleware(), api.GetCategoryByProblem)
 	v1.GET("/category_list", middleware.JWTAuthorMiddleware(), api.GetAllCategories)
+	v1.GET("/category_details", middleware.JWTAuthorMiddleware(), api.GetCategoryDetails)
+	v1.DELETE("/category", middleware.JWTAuthorMiddleware(), api.DeleteCategory)
 
 	// 提交题目相关路由
 	v1.POST("/submit", middleware.JWTAuthorMiddleware(), api.RunCodeHandler)
