@@ -73,13 +73,13 @@ type UserDetailResponse struct {
  */
 
 type CreateProblemRequest struct {
-	Name            string `json:"problem_name" binding:"required"`
+	Name            string `json:"problemName" binding:"required"`
 	Description     string `json:"description" binding:"required"`
-	TestCase        string `json:"test_case" binding:"required"`
+	TestCase        string `json:"testCase" binding:"required"`
 	Author          string `json:"author"`
-	TimeLimit       int64  `json:"time_limit" binding:"required,min=1"`
-	MemoryLimit     int64  `json:"memory_limit" binding:"required,min=1"`
-	DifficultyLevel string `json:"difficulty_level" binding:"required"`
+	TimeLimit       int    `json:"timeLimit" binding:"required,min=1"`
+	MemoryLimit     int    `json:"memoryLimit" binding:"required,min=1"`
+	DifficultyLevel string `json:"difficultyLevel" binding:"required"`
 }
 
 type ListProblemRequest struct {

@@ -14,8 +14,8 @@ func createRandomProblem(t *testing.T) *model.Problem {
 		Description:     random.RandomStringWithLetter(100),
 		TestCase:        random.RandomStringWithNumber(20),
 		Author:          random.RandomUserName(),
-		TimeLimit:       random.RandomInt(1, 100),
-		MemoryLimit:     random.RandomInt(1, 100),
+		TimeLimit:       int(random.RandomInt(1, 100)),
+		MemoryLimit:     int(random.RandomInt(1, 100)),
 		DifficultyLevel: random.RandomDiffcultyLevel(),
 	}
 

@@ -23,3 +23,5 @@ redis:
   db: 0
   pool_size: 100
   password: ""
+judger:
+  path: "/home/thewalkers/Documents/Data/tests/test_case"

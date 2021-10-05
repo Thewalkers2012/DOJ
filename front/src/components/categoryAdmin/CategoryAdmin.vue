@@ -1,7 +1,7 @@
 <template>
   <div class="mt-3">
     <!-- 显示文章的详细信息的对话框 -->
-    <b-modal id="category_details" size="lg" title="文章详情">
+    <b-modal id="category_details" size="lg" title="文章详情" hide-footer>
       <h5>作者：{{ dCategory.author }}</h5>
       <hr />
       <pre>{{ dCategory.content }}</pre>
@@ -92,7 +92,7 @@ export default {
       this.deleteParams.categoryID = id;
       const { data: res } = await categoryService.deleteCategory(this.deleteParams);
       if (res.code === 200) {
-        this.$bvToast.toast('删除角色成功', {
+        this.$bvToast.toast('删除文章成功', {
           title: '删除成功',
           variant: 'success',
           solid: true,

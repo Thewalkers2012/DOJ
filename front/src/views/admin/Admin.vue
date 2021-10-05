@@ -2,6 +2,7 @@
   <div class="mt-3">
     <h2 class="text-center" v-if="isUser">用户管理</h2>
     <h2 class="text-center" v-else-if="isCategory">文章管理</h2>
+    <h2 class="text-center" v-else-if="isProblem">题目管理</h2>
     <b-card class="mt-3">
       <div class="d-flex justify-content-between align-items-center">
         <div></div>
@@ -20,6 +21,7 @@
       <hr />
       <UserAdmin v-if="isUser"></UserAdmin>
       <CategoryAdmin v-else-if="isCategory"></CategoryAdmin>
+      <ProblemAdmin v-else-if="isProblem"> </ProblemAdmin>
     </b-card>
   </div>
 </template>
@@ -27,6 +29,7 @@
 <script>
 import UserAdmin from '../../components/userAdmin/UserAdmin.vue';
 import CategoryAdmin from '../../components/categoryAdmin/CategoryAdmin.vue';
+import ProblemAdmin from '../../components/problemAdmin/ProblemAdmin.vue';
 
 export default {
   name: 'Admin',
@@ -67,6 +70,7 @@ export default {
   components: {
     UserAdmin,
     CategoryAdmin,
+    ProblemAdmin,
   },
 };
 </script>

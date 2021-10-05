@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-modal id="code-modal" size="xl">
+    <b-modal id="code-modal" size="xl" hide-footer>
       <pre v-highlightjs><code :class="language">{{ code }}</code></pre>
     </b-modal>
     <b-table

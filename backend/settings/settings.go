@@ -18,6 +18,7 @@ type AppConfig struct {
 	*LogConfig   `mapstructure:"log"`
 	*MySQLConfig `mapstructure:"mysql"`
 	*RedisConfig `mapstructure:"redis"`
+	*JudgeServer `mapstructure:"judger"`
 }
 
 type LogConfig struct {
@@ -45,6 +46,10 @@ type RedisConfig struct {
 	PoolSize int    `mapstructure:"pool_size"`
 	DB       int    `mapstructure:"db"`
 	Password string `mapstructure:"password"`
+}
+
+type JudgeServer struct {
+	TestPath string `mapstructure:"path"`
 }
 
 func Init() (err error) {

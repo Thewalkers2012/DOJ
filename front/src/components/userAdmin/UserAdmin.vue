@@ -3,42 +3,36 @@
     <div>
       <div>
         <!-- 修改角色表单 -->
-        <b-modal
-          id="updateUser"
-          ref="modal"
-          title="修改表单"
-          @show="resetModal"
-          @hidden="resetModal"
-          @ok="handleOK"
-        >
-          <form ref="form" @submit.stop.prevent="updateSubmit">
-            <b-form-group
-              label="用户名"
-              label-for="name-input"
-              invalid-feedback="用户名为必填项"
-              :state="updateUsernameState"
+        <b-modal id="updateUser" ref="updateUser" title="修改表单" hide-footer>
+          <!-- 用户名 -->
+          <b-form-group label="用户名">
+            <b-form-input
+              v-model="$v.updateParams.username.$model"
+              required
+              :state="validateState1('username')"
+              placeholder="请输入用户名"
+            ></b-form-input>
+            <b-form-invalid-feedback :state="validateState1('username')">
+              用户名为必填字段
+            </b-form-invalid-feedback>
+          </b-form-group>
+          <b-form-group label="学号">
+            <b-form-input
+              v-model="$v.updateParams.studentID.$model"
+              required
+              :state="validateState1('studentID')"
+              placeholder="请输入学号"
+            ></b-form-input>
+            <b-form-invalid-feedback :state="validateState1('studentID')">
+              学号必须为 11 位
+            </b-form-invalid-feedback>
+          </b-form-group>
+          <!-- 按钮 -->
+          <b-form-group>
+            <b-button variant="outline-info" block @click="updateUser"
+              >修改</b-button
             >
-              <b-form-input
-                id="name-input"
-                v-model="updateParams.username"
-                :state="updateUsernameState"
-                required
-              ></b-form-input>
-            </b-form-group>
-            <b-form-group
-              label="学号"
-              label-for="studentID-input"
-              invalid-feedback="学号为必填项"
-              :state="updateStudentIDState"
-            >
-              <b-form-input
-                id="studentID-input"
-                v-model="updateParams.studentID"
-                :state="updateStudentIDState"
-                required
-              ></b-form-input>
-            </b-form-group>
-          </form>
+          </b-form-group>
         </b-modal>
         <!-- 修改角色结束 -->
         <!-- 显示角色详细信息的开始 -->
@@ -53,55 +47,48 @@
           <!-- 显示角色具体信息的结束 -->
         </b-modal>
         <!-- 添加角色显示位置 -->
-        <b-modal
-          id="addUser"
-          ref="modal"
-          title="增加表单"
-          @show="addResetModal"
-          @hidden="addResetModal"
-          @ok="addHandleOK"
-        >
-          <form ref="form" @submit.stop.prevent="addSubmit">
-            <b-form-group
-              label="用户名"
-              label-for="name-input"
-              invalid-feedback="用户名为必填项"
-              :state="addUsernameState"
+        <b-modal id="addUser" ref="addUser" title="增加表单" hide-footer>
+          <!-- 用户名 -->
+          <b-form-group label="用户名">
+            <b-form-input
+              v-model="$v.addParams.username.$model"
+              required
+              :state="validateState2('username')"
+              placeholder="请输入用户名"
+            ></b-form-input>
+            <b-form-invalid-feedback :state="validateState2('username')">
+              用户名为必填字段
+            </b-form-invalid-feedback>
+          </b-form-group>
+          <b-form-group label="学号">
+            <b-form-input
+              v-model="$v.addParams.studentID.$model"
+              required
+              :state="validateState2('studentID')"
+              placeholder="请输入学号"
+            ></b-form-input>
+            <b-form-invalid-feedback :state="validateState2('studentID')">
+              学号必须为 11 位
+            </b-form-invalid-feedback>
+          </b-form-group>
+          <b-form-group label="密码">
+            <b-form-input
+              type="password"
+              v-model="$v.addParams.password.$model"
+              required
+              :state="validateState2('password')"
+              placeholder="请输入密码"
+            ></b-form-input>
+            <b-form-invalid-feedback :state="validateState2('password')">
+              密码必须大于 6 位并小于 12 位
+            </b-form-invalid-feedback>
+          </b-form-group>
+          <!-- 按钮 -->
+          <b-form-group>
+            <b-button variant="outline-info" block @click="addUser"
+              >添加</b-button
             >
-              <b-form-input
-                id="name-input"
-                v-model="addParams.username"
-                :state="addUsernameState"
-                required
-              ></b-form-input>
-            </b-form-group>
-            <b-form-group
-              label="学号"
-              label-for="studentID-input"
-              invalid-feedback="学号为必填项"
-              :state="addStudentIDState"
-            >
-              <b-form-input
-                id="studentID-input"
-                v-model="addParams.studentID"
-                :state="addStudentIDState"
-                required
-              ></b-form-input>
-            </b-form-group>
-            <b-form-group
-              label="密码"
-              label-for="password-input"
-              invalid-feedback="密码为必填项"
-              :state="addPasswordState"
-            >
-              <b-form-input
-                id="password-input"
-                v-model="addParams.password"
-                :state="addPasswordState"
-                required
-              ></b-form-input>
-            </b-form-group>
-          </form>
+          </b-form-group>
         </b-modal>
         <!-- 添加角色显示位置结束 -->
       </div>
@@ -132,7 +119,7 @@
             <!-- 显示修改 -->
             <b-button
               variant="warning"
-              @click="changeUser(data.value)"
+              @click="setUpdateID(data.value)"
               size="sm"
               class="ml-3"
               v-b-modal.updateUser
@@ -164,6 +151,7 @@
 </template>
 
 <script>
+import { required, minLength, maxLength } from 'vuelidate/lib/validators';
 import userService from '../../service/userService';
 
 export default {
@@ -183,9 +171,6 @@ export default {
         studentID: '',
         password: '',
       },
-      addUsernameState: null,
-      addStudentIDState: null,
-      addPasswordState: null,
       // 获取用户详细信息相关
       detailsParams: {
         userID: '',
@@ -200,8 +185,6 @@ export default {
         userID: 1,
         studentID: '',
       },
-      updateUsernameState: null,
-      updateStudentIDState: null,
       // 页码相关
       params: {
         pageSize: 10,
@@ -212,6 +195,34 @@ export default {
       user: {},
     };
   },
+  // 数据校验部分
+  validations: {
+    addParams: {
+      username: {
+        required,
+      },
+      studentID: {
+        required,
+        minLength: minLength(10),
+        maxLength: maxLength(10),
+      },
+      password: {
+        required,
+        minLength: minLength(6),
+        maxLength: maxLength(12),
+      },
+    },
+    updateParams: {
+      username: {
+        required,
+      },
+      studentID: {
+        required,
+        minLength: minLength(10),
+        maxLength: maxLength(10),
+      },
+    },
+  },
   methods: {
     async getUserList() {
       const { data: res } = await userService.userList(this.params);
@@ -219,104 +230,80 @@ export default {
       this.total = res.data.total;
     },
     // 添加角色相关
-    validateAddUsername() {
-      const valid = this.$refs.form.checkValidity();
-      this.addUsernameState = valid;
-      return valid;
+    validateState2(name) {
+      const { $dirty, $error } = this.$v.addParams[name];
+      return $dirty ? !$error : null;
     },
-    validateAddStudentID() {
-      const valid = this.$refs.form.checkValidity();
-      this.addStudentIDState = valid;
-      return valid;
-    },
-    validateAddPassword() {
-      const valid = this.$refs.form.checkValidity();
-      this.addPasswordState = valid;
-      return valid;
-    },
-    addResetModal() {
+
+    clearAddParams() {
       this.addParams.username = '';
-      this.addUsernameState = null;
       this.addParams.studentID = '';
-      this.addStudentIDState = null;
       this.addParams.password = '';
-      this.addPasswordState = null;
+      // eslint-disable-next-line dot-notation
+      this.$refs['addUser'].hide();
+      this.$v.$reset();
     },
-    addHandleOK(bvModalEvt) {
-      bvModalEvt.preventDefault();
-      this.addSubmit();
-    },
-    async addSubmit() {
-      if (!this.validateAddUsername()) {
-        return;
-      }
-      if (!this.validateAddStudentID()) {
-        return;
-      }
-      if (!this.validateAddPassword()) {
+    async addUser() {
+      this.$v.addParams.$touch();
+      if (this.$v.addParams.$anyError) {
         return;
       }
 
       await userService.register(this.addParams).then(() => {
-        this.$bvToast.toast('添加角色成功', {
-          title: '添加成功',
+        this.$bvToast.toast('创建角色成功', {
+          title: '创建成功',
           variant: 'success',
           solid: true,
         });
+        this.clearAddParams();
         this.getUserList();
       }).catch((err) => {
         this.$bvToast.toast(err.response.data.msg, {
-          title: '登录失败',
+          title: '创建失败',
           variant: 'danger',
           solid: true,
         });
       });
-
-      this.$nextTick(() => {
-        this.$bvModal.hide('addUser');
-      });
     },
     // 更新角色相关
-    validateUpdateUserName() {
-      const valid = this.$refs.form.checkValidity();
-      this.updateUsernameState = valid;
-      return valid;
+    validateState1(name) {
+      // 这里是 es6 的解构赋值
+      const { $dirty, $error } = this.$v.updateParams[name];
+      return $dirty ? !$error : null;
     },
-    validateUpdateStudentID() {
-      const valid = this.$refs.form.checkValidity();
-      this.updateStudentIDState = valid;
-      return valid;
-    },
-    changeUser(id) {
-      sessionStorage.setItem('updateUserID', id);
-    },
-    async updateSubmit() {
-      // Exit when the form isn't valid
-      if (!this.validateUpdateUserName()) {
-        return;
-      }
-
-      if (!this.validateUpdateStudentID()) {
-        return;
-      }
-
-      this.updateParams.userID = parseInt(sessionStorage.getItem('updateUserID'), 10);
-      const { data: res } = await userService.updateUser(this.updateParams);
-      this.user = res.data.user;
-      this.getUserList();
-      this.$nextTick(() => {
-        this.$bvModal.hide('updateUser');
-      });
-    },
-    resetModal() {
+    clearUpdateParams() {
       this.updateParams.username = '';
-      this.updateUsernameState = null;
       this.updateParams.studentID = '';
-      this.updateStudentIDState = null;
+      this.updateParams.userID = 1;
+      // eslint-disable-next-line dot-notation
+      this.$refs['updateUser'].hide();
+      this.$v.$reset();
     },
-    handleOK(bvModalEvt) {
-      bvModalEvt.preventDefault();
-      this.updateSubmit();
+    setUpdateID(id) {
+      this.updateParams.userID = id;
+      console.log(this.updateParams.userID);
+    },
+    async updateUser() {
+      this.$v.updateParams.$touch();
+      if (this.$v.updateParams.$anyError) {
+        return;
+      }
+
+      await userService.updateUser(this.updateParams).then(() => {
+        this.$bvToast.toast('修改角色成功', {
+          title: '修改成功',
+          variant: 'success',
+          solid: true,
+        });
+        this.clearUpdateParams();
+        this.getUserList();
+      }).catch((err) => {
+        this.$bvToast.toast(err.response.data.msg, {
+          title: '修改失败',
+          variant: 'danger',
+          solid: true,
+        });
+      });
     },
     // 删除角色相关
     async deleteUser(id) {
