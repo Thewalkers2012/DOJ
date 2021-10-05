@@ -148,7 +148,7 @@ func GenerateTestCase(params []model.TestCase) string {
 	res.WriteString("\"test_cases\":")
 	res.WriteByte('{')
 	for i := 1; i <= n; i++ {
-		str := fmt.Sprintf("\"%d\": {\"stripped_output_md5\": \"%s\", \"output_size\": %d, \"output_md5\": \"%s\", \"input_name\": \"%s\", \"input_size\": %d, \"output_name\": %s}",
+		str := fmt.Sprintf("\"%d\": {\"stripped_output_md5\": \"%s\", \"output_size\": %d, \"output_md5\": \"%s\", \"input_name\": \"%s\", \"input_size\": %d, \"output_name\": \"%s\"}",
 			i,
 			params[i-1].StrippedOutputMd5,
 			params[i-1].OutputSize,

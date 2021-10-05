@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/Thewalkers2012/DOJ/middleware"
@@ -41,8 +42,10 @@ func RunCodeHandler(ctx *gin.Context) {
 		return
 	}
 
+	fmt.Println(req.Code)
+
 	// 将数据传送给 Client 然后 Client 将 Json 结果返回给后端，再由后端返回给前端
-	resp := judge.SubmitCode(req.Code, req.Language, 1000, 64*1024*1024, "normal")
+	resp := judge.SubmitCode(req.Code, req.Language, 1000, 64*1024*1024, "5")
 
 	// 编译错误
 	if resp.Err() != nil {
