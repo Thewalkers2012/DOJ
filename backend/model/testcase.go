@@ -1,9 +1,9 @@
 package model
 
 type Info struct {
-	TestCaseNum int  `json:"test_case_number"` // 测试样例的数目
-	Spj         bool `json:"spj"`
-	TestCases   []TestCase
+	TestCaseNum int        `json:"test_case_number"` // 测试样例的数目
+	Spj         bool       `json:"spj"`
+	TestCases   []TestCase `json:"test_cases"`
 }
 
 type TestCase struct {

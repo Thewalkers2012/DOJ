@@ -10,9 +10,13 @@ import (
 
 func TestCreateTestcase(t *testing.T) {
 	args := &model.Info{
-		TestCaseNum: 1,
+		TestCaseNum: 2,
 		Spj:         false,
 		TestCases: []model.TestCase{
+			{
+				Input:  random.RandomStringWithNumber(20),
+				Output: random.RandomStringWithNumber(20),
+			},
 			{
 				Input:  random.RandomStringWithNumber(20),
 				Output: random.RandomStringWithNumber(20),
