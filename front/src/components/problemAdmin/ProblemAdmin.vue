@@ -108,23 +108,6 @@
       <!-- 对题目进行具体的操作 -->
       <template #cell(problem_id)="data">
         <div class="flex justify-content-between align-items-center">
-          <!-- 显示详情 -->
-          <b-button
-            variant="primary"
-            @click="problemDetails(data.value)"
-            size="sm"
-          >
-            详情
-          </b-button>
-          <!-- 显示修改 -->
-          <b-button
-            variant="warning"
-            @click="problemUpdate(data.value)"
-            size="sm"
-            class="ml-3"
-          >
-            修改
-          </b-button>
           <!-- 显示删除 -->
           <b-button
             variant="danger"
@@ -250,12 +233,6 @@ export default {
           solid: true,
         });
       });
-    },
-    problemDetails(id) {
-      console.log(id);
-    },
-    problemUpdate(id) {
-      console.log(id);
     },
     problemDelete(id) {
       console.log(id);

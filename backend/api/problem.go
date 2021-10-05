@@ -22,11 +22,6 @@ const (
 	getProblemListSuccess   = "获取问题列表成功"
 )
 
-/*
-	test_case is the test_case path: is the (path + problem_id)
-	test_case num
-*/
-
 // Create Problem
 func CreateProblemHandler(ctx *gin.Context) {
 	req := new(model.CreateProblemRequest)
