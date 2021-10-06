@@ -173,7 +173,7 @@ export default {
         { key: 'difficulty_level', label: '难度' },
         { key: 'problem_name', label: '题目描述' },
         { key: 'time_limit', label: '时间限制 （ms）' },
-        { key: 'memory_limit', label: '内存限制（kb）' },
+        { key: 'memory_limit', label: '内存限制（b）' },
         { key: 'problem_id', label: '操作' },
       ],
       testCases: [],
@@ -225,6 +225,7 @@ export default {
     async getProblemList() {
       const { data: res } = await problemService.getProblemList(this.params);
       this.problems = res.data.problems;
+
       this.total = res.data.total;
     },
     clearParams() {

@@ -2,7 +2,26 @@
   <div class="ProblemList">
     <div class="mt-3 text-center">
       <h1>在线题库</h1>
-      <Search class="mt-3"> </Search>
+      <!-- 搜索框 -->
+      <div class="mt-3">
+        <b-row>
+          <b-col
+            class="d-flex justify-content-between align-items-center"
+            md="8"
+            offset-md="2"
+          >
+            <b-form-input
+              v-model="text"
+              placeholder="请输入题目的编号"
+              type="number"
+              class="mr-3"
+            ></b-form-input>
+            <b-button variant="outline-primary" @click="getSignalProblem"
+              >Search</b-button
+            >
+          </b-col>
+        </b-row>
+      </div>
 
       <b-list-group class="mt-3">
         <b-list-group-item
@@ -69,7 +88,6 @@
 
 <script>
 import problemService from '../service/problemService';
-import Search from './search/Search.vue';
 
 export default {
   data() {
@@ -82,6 +100,7 @@ export default {
       problem: {},
       total: 100,
       currentPage: 1,
+      text: '',
     };
   },
   methods: {
@@ -93,12 +112,16 @@ export default {
     async getProblemByID(id) {
       sessionStorage.setItem('problem_id', id);
     },
+    async getSignalProblem() {
+      const { data: res } = await problemService.getProblemByID(parseInt(this.text, 10));
+      this.problemList = [res.data.problem];
+      this.total = 1;
+    },
   },
   created() {
     this.getProblemList();
   },
   components: {
-    Search,
   },
   watch: {
     currentPage() {

@@ -24,7 +24,7 @@
               placeholder="请输入学号"
             ></b-form-input>
             <b-form-invalid-feedback :state="validateState1('studentID')">
-              学号必须为 11 位
+              学号必须为 10 位
             </b-form-invalid-feedback>
           </b-form-group>
           <!-- 按钮 -->
@@ -36,7 +36,7 @@
         </b-modal>
         <!-- 修改角色结束 -->
         <!-- 显示角色详细信息的开始 -->
-        <b-modal id="user_details" size="lg" title="用户详情">
+        <b-modal id="user_details" size="lg" title="用户详情" hide-footer>
           <h5>学号：{{ user.studentID }}</h5>
           <hr />
           <h5>用户名：{{ user.username }}</h5>
@@ -307,22 +307,20 @@ export default {
     },
     // 删除角色相关
     async deleteUser(id) {
-      console.log(id);
       this.deleteParams.userID = id;
-      const { data: res } = await userService.deleteUser(this.deleteParams);
-      if (res.code === 200) {
+      await userService.deleteUser(this.deleteParams).then(() => {
         this.$bvToast.toast('删除角色成功', {
           title: '删除成功',
           variant: 'success',
           solid: true,
         });
-      } else {
-        this.$bvToast.toast(res.data.msg, {
+      }).catch((err) => {
+        this.$bvToast.toast(err.response.data.msg, {
           title: '删除失败',
           variant: 'danger',
           solid: true,
         });
-      }
+      });
       // 重新获取列表
       this.getUserList();
     },
