@@ -72,14 +72,20 @@ type UserDetailResponse struct {
 * 与 Problem 相关的请求参数
  */
 
+type Cases struct {
+	Input  string `json:"input"`
+	Output string `json:"output"`
+}
+
 type CreateProblemRequest struct {
-	Name            string `json:"problemName" binding:"required"`
-	Description     string `json:"description" binding:"required"`
-	TestCase        string `json:"testCase" binding:"required"`
-	Author          string `json:"author"`
-	TimeLimit       int    `json:"timeLimit" binding:"required,min=1"`
-	MemoryLimit     int    `json:"memoryLimit" binding:"required,min=1"`
-	DifficultyLevel string `json:"difficultyLevel" binding:"required"`
+	Name            string   `json:"problemName" binding:"required"`
+	Description     string   `json:"description" binding:"required"`
+	TestCase        string   `json:"testCase" binding:"required"`
+	Author          string   `json:"author"`
+	TimeLimit       int      `json:"timeLimit" binding:"required,min=1"`
+	MemoryLimit     int      `json:"memoryLimit" binding:"required,min=1"`
+	DifficultyLevel string   `json:"difficultyLevel" binding:"required"`
+	Cases           []*Cases `json:"cases"`
 }
 
 type ListProblemRequest struct {

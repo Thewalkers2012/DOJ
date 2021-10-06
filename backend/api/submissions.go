@@ -73,10 +73,11 @@ func RunCodeHandler(ctx *gin.Context) {
 		return
 	}
 
+	// 获取所有的测试样例的结果
 	res := resp.SliceData()
 
-	total := len(res)   // 样例总数
-	score := float64(0) // 最终得分
+	total := len(res)     // 样例总数
+	score := float64(100) // 最终得分
 	avge := float64(100.0 / float64(total))
 	time := 0   // 平均时间
 	memory := 0 // 平均内存
@@ -85,15 +86,14 @@ func RunCodeHandler(ctx *gin.Context) {
 	for i := 0; i < total; i++ {
 		if res[i].Result != 0 {
 			result = res[i].Result
-		} else {
-			score += avge
+			score -= avge
 		}
 		time += res[i].RealTime
 		memory += int(res[i].Memory)
 	}
 
-	time /= total
-	memory /= total * 1024
+	time /= total          // 转化为 ms
+	memory /= total * 1024 // 转化为 kb
 
 	// 将提交结果保存到数据库中
 	_, err = server.CreateSubmission(req, studentID.(string), &model.SubmitResult{

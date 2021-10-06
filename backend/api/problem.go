@@ -9,6 +9,7 @@ import (
 	"github.com/Thewalkers2012/DOJ/response"
 	"github.com/Thewalkers2012/DOJ/server"
 	_ "github.com/Thewalkers2012/DOJ/swagger/docs"
+	"github.com/Thewalkers2012/DOJ/util/testcase"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"go.uber.org/zap"
@@ -37,7 +38,29 @@ func CreateProblemHandler(ctx *gin.Context) {
 		return
 	}
 
+	// 1. 创建 info 变量
+	info := &model.Info{
+		TestCaseNum: len(req.Cases),
+		Spj:         false,
+		TestCases:   []model.TestCase{},
+	}
+
+	for i := 0; i < len(req.Cases); i++ {
+		info.TestCases = append(info.TestCases, model.TestCase{
+			Input:  req.Cases[i].Input,
+			Output: req.Cases[i].Output,
+		})
+	}
+
+	// 2. 在数据库中建立该题目
 	problem := server.CreateProblem(req)
+
+	// 3. 将 info 以及 testcase 存储到相应的位置
+	err := testcase.CreateTestcase(info, problem.ID)
+	if err != nil {
+		response.Response(ctx, http.StatusInternalServerError, http.StatusInternalServerError, gin.H{}, busy)
+		return
+	}
 
 	response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{
 		"problem": problem,

@@ -72,7 +72,6 @@ func CreateTestFile(num int, testcase []model.TestCase, base string) error {
 	for i := 1; i <= num; i++ {
 		// 创建 xx.in 文件
 		testcase[i-1].InputName = fmt.Sprintf("%d.in", i)
-		fmt.Println(testcase[i-1].InputName)
 		inputFile, err := os.Create(testcase[i-1].InputName)
 		if err != nil {
 			zap.L().Error("create input file failed", zap.Error(err))

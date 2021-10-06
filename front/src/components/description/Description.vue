@@ -53,6 +53,7 @@
           class="ml-3"
           @click="submitProblem"
           v-bind:disabled="isSubmit"
+          size="lg"
         >
           提交代码
         </b-button>

@@ -14,7 +14,7 @@ const getSubmissions = ({ problemID }) => request.get('submission', { params: { 
 
 // 创建题目
 const createProblem = ({
-  problemName, description, testCase, author, timeLimit, memoryLimit, difficultyLevel,
+  problemName, description, testCase, author, timeLimit, memoryLimit, difficultyLevel, cases,
 }) => request.post(
   'problem',
   {
@@ -25,6 +25,7 @@ const createProblem = ({
     timeLimit,
     memoryLimit,
     difficultyLevel,
+    cases,
   },
 );
 

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- model 开始 -->
     <b-modal
       id="addProblem"
       ref="addProblem"
@@ -84,14 +85,35 @@
             测试样例数目为必填项
           </b-form-invalid-feedback>
         </b-form-group>
+        <!-- 循环样例 -->
+        <div v-for="count in parseInt(problem.testCase, 10)" v-bind:key="count">
+          <h5 class="mt-3">第 {{ count }} 组测试样例</h5>
+          <div class="d-flex justify-content-between align-items-center">
+            <b-form-textarea
+              id="textarea"
+              placeholder="输入"
+              rows="3"
+              max-rows="6"
+              v-model="store[count].input"
+            ></b-form-textarea>
+            <b-form-textarea
+              id="textarea"
+              placeholder="输出"
+              rows="3"
+              max-rows="6"
+              v-model="store[count].output"
+            ></b-form-textarea>
+          </div>
+        </div>
         <!-- 按钮 -->
-        <b-form-group>
+        <b-form-group class="mt-3">
           <b-button variant="outline-info" block @click="createProblem"
             >创建</b-button
           >
         </b-form-group>
       </b-form>
     </b-modal>
+    <!-- model 结束 -->
     <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
       <div></div>
       <b-button variant="outline-primary" size="lg" v-b-modal.addProblem
@@ -154,6 +176,8 @@ export default {
         { key: 'memory_limit', label: '内存限制（kb）' },
         { key: 'problem_id', label: '操作' },
       ],
+      testCases: [],
+      store: [],
       // 关于添加题目的位置
       problem: {
         problemName: '', // 题目的名称
@@ -161,8 +185,9 @@ export default {
         difficultyLevel: '', // 难易程度
         timeLimit: 0, // 时间限制
         memoryLimit: 0, // 空间限制
-        testCase: 0, // 测试样例的数目
+        testCase: 1, // 测试样例的数目
         author: 'admin',
+        cases: [], // 所有的测试样例
       },
     };
   },
@@ -218,6 +243,15 @@ export default {
       if (this.$v.problem.$anyError) {
         return;
       }
+      // 添加题目
+      for (let i = 0; i < this.problem.testCase; i += 1) {
+        this.problem.cases.push(this.store[i + 1]);
+      }
+
+      for (let i = 0; i < 10; i += 1) {
+        this.store[i] = {};
+      }
+
       await problemService.createProblem(this.problem).then(() => {
         this.$bvToast.toast('创建题目成功', {
           title: '创建成功',
@@ -240,6 +274,9 @@ export default {
   },
   created() {
     this.getProblemList();
+    for (let i = 0; i < 10; i += 1) {
+      this.store[i] = {};
+    }
   },
   watch: {
     currentPage() {
