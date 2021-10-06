@@ -89,7 +89,6 @@
 <script>
 import problemService from '../../service/problemService';
 import Edit from '../edit/Edit.vue';
-// import getSubmitMsg from '../../helper/getAnswer';
 
 export default {
   data() {

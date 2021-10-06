@@ -2,6 +2,7 @@ package api
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -21,6 +22,7 @@ const (
 	getProblemSuccess       = "获取题目成功"
 	invalidParams           = "请求参数错误"
 	getProblemListSuccess   = "获取问题列表成功"
+	deleteProblemSuccess    = "删除题目成功"
 )
 
 // Create Problem
@@ -120,4 +122,30 @@ func GetProblemList(ctx *gin.Context) {
 		"problems": problems,
 		"total":    total,
 	}, getProblemListSuccess)
+}
+
+// delete problem
+func DeleteProblem(ctx *gin.Context) {
+	req := new(model.DeleteProblemParams)
+	if err := ctx.ShouldBindQuery(req); err != nil {
+		zap.L().Error("api.DeleteProblem failed", zap.Error(err))
+
+		errs, ok := err.(validator.ValidationErrors)
+		if !ok {
+			response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, err.Error())
+		} else {
+			response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, removeTopStruct(errs.Translate(trans)))
+		}
+		return
+	}
+
+	fmt.Println(req.ProblemID)
+
+	err := server.DeleteProblem(req.ProblemID)
+	if err != nil {
+		response.Response(ctx, http.StatusInternalServerError, http.StatusInternalServerError, gin.H{}, busy)
+		return
+	}
+
+	response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{}, deleteProblemSuccess)
 }

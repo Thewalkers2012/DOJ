@@ -39,6 +39,7 @@ func Setup(mode string) *gin.Engine {
 	v1.POST("/problem", middleware.JWTAuthorMiddleware(), api.CreateProblemHandler)
 	v1.GET("/problem/:id", middleware.JWTAuthorMiddleware(), api.GetProblemByIDHandler)
 	v1.GET("/problem", middleware.JWTAuthorMiddleware(), api.GetProblemList)
+	v1.DELETE("/problem", middleware.JWTAuthorMiddleware(), api.DeleteProblem)
 
 	// 文章相关
 	v1.POST("/category", middleware.JWTAuthorMiddleware(), api.CreateCategory)
@@ -52,5 +53,6 @@ func Setup(mode string) *gin.Engine {
 	v1.GET("/submission", middleware.JWTAuthorMiddleware(), api.GetAllSubmissionsByIdAndProblem)
 	v1.GET("/solved", middleware.JWTAuthorMiddleware(), api.GetPersonSolved) // 获取个人 AC 题目数量
 	v1.GET("/submit_count", middleware.JWTAuthorMiddleware(), api.GetPersonSubmission)
+
 	return r
 }

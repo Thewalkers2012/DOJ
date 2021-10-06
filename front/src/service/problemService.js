@@ -29,10 +29,14 @@ const createProblem = ({
   },
 );
 
+// 删除题目
+const deleteProblem = ({ problemID }) => request.delete('problem', { params: { problemID } });
+
 export default {
   getProblemByID,
   getProblemList,
   submitProblem,
   getSubmissions,
   createProblem,
+  deleteProblem,
 };

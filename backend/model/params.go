@@ -93,6 +93,11 @@ type ListProblemRequest struct {
 	PageSize int `form:"pageSize" binding:"required,min=5,max=10"`
 }
 
+// DeleteProblem params
+type DeleteProblemParams struct {
+	ProblemID int64 `form:"problemID"`
+}
+
 /*
 * 与 Submission 相关的请求参数
  */

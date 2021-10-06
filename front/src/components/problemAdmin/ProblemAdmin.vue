@@ -189,6 +189,10 @@ export default {
         author: 'admin',
         cases: [], // 所有的测试样例
       },
+      // 关于删除题目
+      deleteProblemParams: {
+        problemID: 1,
+      },
     };
   },
   // 数据校验部分
@@ -268,8 +272,22 @@ export default {
         });
       });
     },
-    problemDelete(id) {
-      console.log(id);
+    async problemDelete(id) {
+      this.deleteProblemParams.problemID = id;
+      await problemService.deleteProblem(this.deleteProblemParams).then(() => {
+        this.$bvToast.toast('删除题目成功', {
+          title: '删除成功',
+          variant: 'success',
+          solid: true,
+        });
+        this.getProblemList();
+      }).catch((err) => {
+        this.$bvToast.toast(err.response.data.msg, {
+          title: '删除失败',
+          variant: 'danger',
+          solid: true,
+        });
+      });
     },
   },
   created() {

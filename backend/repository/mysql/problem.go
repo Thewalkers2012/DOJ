@@ -38,3 +38,8 @@ func GetProblemSize() int64 {
 	DB.Model(&model.Problem{}).Count(&count)
 	return count
 }
+
+func DeleteProblem(id int64) error {
+	err := DB.Delete(&model.Problem{}, id).Error
+	return err
+}

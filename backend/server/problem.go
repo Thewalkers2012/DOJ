@@ -38,3 +38,8 @@ func GetProblemList(offset, limit int) ([]*model.Problem, int64, error) {
 
 	return problems, total, err
 }
+
+// DeleteProblem 删除题目
+func DeleteProblem(id int64) error {
+	return mysql.DeleteProblem(id)
+}
