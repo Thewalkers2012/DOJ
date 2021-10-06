@@ -10,12 +10,16 @@ import (
 
 func TestCreateTestcase(t *testing.T) {
 	args := &model.Info{
-		TestCaseNum: 1,
+		TestCaseNum: 2,
 		Spj:         false,
 		TestCases: []model.TestCase{
 			{
 				Input:  "1 2",
-				Output: "3          ",
+				Output: "3",
+			},
+			{
+				Input:  "4 10",
+				Output: "14",
 			},
 		},
 	}

@@ -1,14 +1,12 @@
 package api
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/Thewalkers2012/DOJ/middleware"
 	"github.com/Thewalkers2012/DOJ/model"
 	"github.com/Thewalkers2012/DOJ/response"
 	"github.com/Thewalkers2012/DOJ/server"
-	"github.com/Thewalkers2012/DOJ/util/judge"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"go.uber.org/zap"
@@ -21,6 +19,7 @@ const (
 	Accept                  = 0
 	WrongAnswer             = -1
 	TimeLimitExceeded       = 1
+	MemoryLimitExceeded     = 3
 	RunTimeError            = 4
 	CompileError            = 6
 )
@@ -42,10 +41,11 @@ func RunCodeHandler(ctx *gin.Context) {
 		return
 	}
 
-	fmt.Println(req.Code)
-
-	// 将数据传送给 Client 然后 Client 将 Json 结果返回给后端，再由后端返回给前端
-	resp := judge.SubmitCode(req.Code, req.Language, 1000, 64*1024*1024, "5")
+	resp, err := server.RunCode(req)
+	if err != nil {
+		response.Response(ctx, http.StatusInternalServerError, http.StatusInternalServerError, gin.H{}, busy)
+		return
+	}
 
 	// 编译错误
 	if resp.Err() != nil {
@@ -67,21 +67,42 @@ func RunCodeHandler(ctx *gin.Context) {
 				AnswerCode: CompileError,
 				Time:       0,
 				Memory:     0,
-				Score:      10,
+				Score:      0,
 			},
 		}, resp.Err().Error())
 		return
 	}
 
-	res := resp.SliceData()[0]
+	res := resp.SliceData()
+
+	total := len(res)   // 样例总数
+	score := float64(0) // 最终得分
+	avge := float64(100.0 / float64(total))
+	time := 0   // 平均时间
+	memory := 0 // 平均内存
+	result := 0 // 最终结果
+
+	for i := 0; i < total; i++ {
+		if res[i].Result != 0 {
+			result = res[i].Result
+		} else {
+			score += avge
+		}
+		time += res[i].RealTime
+		memory += int(res[i].Memory)
+	}
+
+	time /= total
+	memory /= total * 1024
 
 	// 将提交结果保存到数据库中
-	_, err := server.CreateSubmission(req, studentID.(string), &model.SubmitResult{
-		AnswerCode: res.Result,
-		Time:       res.RealTime,
-		Memory:     res.Memory / 1024,
-		Score:      100,
+	_, err = server.CreateSubmission(req, studentID.(string), &model.SubmitResult{
+		AnswerCode: result,
+		Time:       time,
+		Memory:     int64(memory),
+		Score:      int(score),
 	})
+
 	if err != nil {
 		zap.L().Error("server.CreateSubmission failed", zap.Error(err))
 		response.Response(ctx, http.StatusInternalServerError, http.StatusInternalServerError, gin.H{}, busy)
@@ -90,10 +111,10 @@ func RunCodeHandler(ctx *gin.Context) {
 
 	response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{
 		"data": model.SubmitResult{
-			AnswerCode: res.Result,
-			Time:       res.RealTime,
-			Memory:     res.Memory,
-			Score:      10,
+			AnswerCode: result,
+			Time:       time,
+			Memory:     int64(memory),
+			Score:      int(score),
 		},
 	}, SubmitSuccess)
 }

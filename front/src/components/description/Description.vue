@@ -152,6 +152,8 @@ export default {
         this.submitMsg = 'Time Limit Exceeded';
       } else if (codeValue === 4) {
         this.submitMsg = 'RunTime Error';
+      } else if (codeValue === 3) {
+        this.submitMsg = 'Memory Limit Exceeded';
       } else {
         this.submitMsg = 'Compile Error';
         this.compileMsg = msg;

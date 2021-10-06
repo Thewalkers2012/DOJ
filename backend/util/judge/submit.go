@@ -38,7 +38,16 @@ func GetAnswerMsg(code int) string {
 		return "Time Limit Exceeded"
 	} else if code == 4 {
 		return "RunTime Error"
+	} else if code == 3 {
+		return "Memory Limit Exceeded"
 	} else {
 		return "Compile Error"
 	}
+}
+
+type JudgeResult struct {
+	Time       int
+	Memory     int
+	ResultCode int
+	Score      int
 }
