@@ -23,12 +23,12 @@
         </b-form-group>
         <!-- 题目描述 -->
         <b-form-group label="题目描述">
-          <b-form-input
+          <v-md-editor
             v-model="$v.problem.description.$model"
-            required
+            height="800px"
             :state="validateState('description')"
-            placeholder="题目的相关描述"
-          ></b-form-input>
+          >
+          </v-md-editor>
           <b-form-invalid-feedback :state="validateState('description')">
             题目描述为必填项
           </b-form-invalid-feedback>
@@ -183,9 +183,9 @@ export default {
         problemName: '', // 题目的名称
         description: '', // 题目描述
         difficultyLevel: '', // 难易程度
-        timeLimit: 0, // 时间限制
-        memoryLimit: 0, // 空间限制
-        testCase: 1, // 测试样例的数目
+        timeLimit: 1000, // 时间限制
+        memoryLimit: 67108864, // 空间限制
+        testCase: '1', // 测试样例的数目
         author: 'admin',
         cases: [], // 所有的测试样例
       },
@@ -234,7 +234,7 @@ export default {
       this.problem.difficultyLevel = '';
       this.problem.timeLimit = 0;
       this.problem.memoryLimit = 0;
-      this.problem.testCase = 0;
+      this.problem.testCase = '1';
       this.problem.author = 'admin';
       // eslint-disable-next-line dot-notation
       this.$refs['addProblem'].hide();
@@ -249,7 +249,7 @@ export default {
         return;
       }
       // 添加题目
-      for (let i = 0; i < this.problem.testCase; i += 1) {
+      for (let i = 0; i < parseInt(this.problem.testCase, 10); i += 1) {
         this.problem.cases.push(this.store[i + 1]);
       }
 

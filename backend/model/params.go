@@ -78,12 +78,12 @@ type Cases struct {
 }
 
 type CreateProblemRequest struct {
+	TimeLimit       int      `json:"timeLimit" binding:"required,min=1"`
+	MemoryLimit     int      `json:"memoryLimit" binding:"required,min=1"`
 	Name            string   `json:"problemName" binding:"required"`
 	Description     string   `json:"description" binding:"required"`
 	TestCase        string   `json:"testCase" binding:"required"`
 	Author          string   `json:"author"`
-	TimeLimit       int      `json:"timeLimit" binding:"required,min=1"`
-	MemoryLimit     int      `json:"memoryLimit" binding:"required,min=1"`
 	DifficultyLevel string   `json:"difficultyLevel" binding:"required"`
 	Cases           []*Cases `json:"cases"`
 }

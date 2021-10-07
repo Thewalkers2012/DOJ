@@ -9,10 +9,10 @@ CREATE TABLE `problems` (
   `id` bigint PRIMARY KEY AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
   `description` text NOT NULL,
-  `testcases` varchar(255) NOT NULL,
+  `test_case` varchar(255) NOT NULL,
   `author` varchar(255) NOT NULL DEFAULT "nobody",
-  `timelimit` bigint NOT NULL,
-  `memorylimit` bigint NOT NULL,
+  `time_limit` bigint NOT NULL,
+  `memory_limit` bigint NOT NULL,
   `difficulty_level` varchar(255) NOT NULL
 );
 CREATE TABLE `submissions` (

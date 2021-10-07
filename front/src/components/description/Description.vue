@@ -1,23 +1,8 @@
 <template>
   <div>
     <!-- 题目描述区域 -->
-    <div>
-      <div class="mt-3">
-        <h3 style="font-weight: bold">题目描述：</h3>
-        <div style="font-size: 20px" class="mt-3">
-          {{ problem.description }}
-        </div>
-      </div>
-      <div class="mt-3">
-        <h3 style="font-weight: bold">输入格式：</h3>
-        <div style="font-size: 20px" class="mt-3">
-          {{ problem.test_case }}
-        </div>
-      </div>
-      <div style="font-size: 20px" class="mt-3">
-        <h3 style="font-weight: bold">输出格式：</h3>
-        {{ problem.test_case }}
-      </div>
+    <div class="mt-3">
+      <v-md-editor :value="problem.description" mode="preview"></v-md-editor>
     </div>
     <!-- 代码编辑区域 -->
     <b-card class="mt-5">
