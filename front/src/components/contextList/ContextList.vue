@@ -63,7 +63,8 @@ export default {
     },
 
     getContext(id) {
-      console.log(id);
+      sessionStorage.setItem('context_id', id);
+      this.$router.push(`/context/${id}`);
     },
   },
 

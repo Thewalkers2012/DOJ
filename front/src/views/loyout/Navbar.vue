@@ -12,7 +12,7 @@
             <b-nav-item @click="$router.push({ name: 'problemList' })"
               >题库</b-nav-item
             >
-            <b-nav-item @click="$router.push({ name: 'Context' })"
+            <b-nav-item @click="$router.push({ name: 'ContextList' })"
               >比赛</b-nav-item
             >
             <b-nav-item @click="$router.push({ name: 'Admin' })"

@@ -1,8 +1,13 @@
 const ContextRoutes = [
   {
     path: '/context',
-    name: 'Context',
+    name: 'ContextList',
     component: () => import('../../components/contextList/ContextList.vue'),
+  },
+  {
+    path: '/context/:id',
+    name: 'Context',
+    component: () => import('../../components/context/Context.vue'),
   },
 ];
 
