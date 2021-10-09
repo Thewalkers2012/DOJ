@@ -115,8 +115,6 @@ type SubmitResult struct {
 	Memory     int64 `json:"memory"`
 }
 
-// TODO: 从评测机来获取运行结果
-
 /*
 *	与文章相关的请求参数
  */
@@ -139,4 +137,19 @@ type GetAllCategoriesParams struct {
 // DeleteCategory And GetCategoryDetails
 type CategoryParams struct {
 	CategoryID int64 `form:"categoryID"`
+}
+
+/*
+*	与比赛相关的请求参数
+ */
+type CreateContextParams struct {
+	Title     string `json:"title"`
+	StartTime Time   `json:"startTime"`
+	EndTime   Time   `json:"endTime"`
+	Author    string `json:"author"`
+}
+
+type GetContextListParams struct {
+	PageNum  int `form:"pageNum" binding:"required,min=1"`
+	PageSize int `form:"pageSize" binding:"required,min=5,max=10"`
 }

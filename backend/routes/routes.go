@@ -54,5 +54,9 @@ func Setup(mode string) *gin.Engine {
 	v1.GET("/solved", middleware.JWTAuthorMiddleware(), api.GetPersonSolved) // 获取个人 AC 题目数量
 	v1.GET("/submit_count", middleware.JWTAuthorMiddleware(), api.GetPersonSubmission)
 
+	// 比赛相关的路由
+	v1.POST("/context", middleware.JWTAuthorMiddleware(), api.CreateContextHandler)
+	v1.GET("/context_list", middleware.JWTAuthorMiddleware(), api.GetContextList)
+
 	return r
 }

@@ -12,10 +12,13 @@
             <b-nav-item @click="$router.push({ name: 'problemList' })"
               >题库</b-nav-item
             >
-            <b-nav-item href="#">关于我们</b-nav-item>
+            <b-nav-item @click="$router.push({ name: 'Context' })"
+              >比赛</b-nav-item
+            >
             <b-nav-item @click="$router.push({ name: 'Admin' })"
               >后台管理</b-nav-item
             >
+            <b-nav-item href="#">关于我们</b-nav-item>
           </b-navbar-nav>
           <b-navbar-nav class="ml-auto">
             <b-nav-item-dropdown right v-if="userInfo">

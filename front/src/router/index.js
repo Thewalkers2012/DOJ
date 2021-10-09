@@ -5,6 +5,7 @@ import Home from '../views/Home.vue';
 import adminRoutes from './module/admin';
 import problemRoutes from './module/problem';
 import userRoutes from './module/user';
+import ContextRoutes from './module/context';
 
 Vue.use(VueRouter);
 
@@ -22,6 +23,7 @@ const routes = [
   ...userRoutes,
   ...problemRoutes,
   ...adminRoutes,
+  ...ContextRoutes,
 ];
 
 const router = new VueRouter({
