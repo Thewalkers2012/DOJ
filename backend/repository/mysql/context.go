@@ -28,3 +28,9 @@ func GetContextSize() int64 {
 	DB.Model(&model.Context{}).Count(&count)
 	return count
 }
+
+func GetContextByID(id int64) (*model.Context, error) {
+	context := new(model.Context)
+	err := DB.Where("id = ?", id).First(context).Error
+	return context, err
+}

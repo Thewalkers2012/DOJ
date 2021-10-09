@@ -57,6 +57,7 @@ func Setup(mode string) *gin.Engine {
 	// 比赛相关的路由
 	v1.POST("/context", middleware.JWTAuthorMiddleware(), api.CreateContextHandler)
 	v1.GET("/context_list", middleware.JWTAuthorMiddleware(), api.GetContextList)
+	v1.GET("/context/:id", middleware.JWTAuthorMiddleware(), api.GetContext)
 
 	return r
 }

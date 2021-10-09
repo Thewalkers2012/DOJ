@@ -15,3 +15,7 @@ func GetContextList(offset, limit int) ([]*model.Context, int64, error) {
 
 	return contexts, total, err
 }
+
+func GetContext(id int64) (*model.Context, error) {
+	return mysql.GetContextByID(id)
+}

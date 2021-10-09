@@ -153,3 +153,7 @@ type GetContextListParams struct {
 	PageNum  int `form:"pageNum" binding:"required,min=1"`
 	PageSize int `form:"pageSize" binding:"required,min=5,max=10"`
 }
+
+type GetContextParams struct {
+	ContextID int64 `params:"contextID"`
+}

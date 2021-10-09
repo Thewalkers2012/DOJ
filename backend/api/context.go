@@ -1,7 +1,9 @@
 package api
 
 import (
+	"errors"
 	"net/http"
+	"strconv"
 
 	"github.com/Thewalkers2012/DOJ/model"
 	"github.com/Thewalkers2012/DOJ/response"
@@ -9,10 +11,13 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"go.uber.org/zap"
+	"gorm.io/gorm"
 )
 
 const (
 	CreateContextSuccess = "创建比赛成功"
+	GetContextSuccess    = "获取比赛成功"
+	getContextFiled      = "获取比赛失败"
 )
 
 func CreateContextHandler(ctx *gin.Context) {
@@ -65,7 +70,31 @@ func GetContextList(ctx *gin.Context) {
 	}
 
 	response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{
-		"problems": contexts,
+		"contexts": contexts,
 		"total":    total,
 	}, getProblemListSuccess)
+}
+
+func GetContext(ctx *gin.Context) {
+	cidStr := ctx.Param("id")
+	cid, err := strconv.ParseInt(cidStr, 10, 64)
+	if err != nil {
+		response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, err.Error())
+		return
+	}
+
+	context, err := server.GetContext(cid)
+	if err != nil {
+		zap.L().Error("server.GetContext failed", zap.Error(err))
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			response.Response(ctx, http.StatusNotFound, http.StatusNotFound, gin.H{}, getContextFiled)
+		} else {
+			response.Response(ctx, http.StatusInternalServerError, http.StatusInternalServerError, gin.H{}, busy)
+		}
+		return
+	}
+
+	response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{
+		"context": context,
+	}, GetContextSuccess)
 }
