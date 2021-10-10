@@ -122,3 +122,29 @@ func DeleteContext(ctx *gin.Context) {
 
 	response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{}, deleteProblemSuccess)
 }
+
+// update context
+func UpdateContext(ctx *gin.Context) {
+	req := new(model.UpdateContextParams)
+	if err := ctx.ShouldBindJSON(req); err != nil {
+		zap.L().Error("api update context failed", zap.Error(err))
+
+		errs, ok := err.(validator.ValidationErrors)
+		if !ok {
+			response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, err.Error())
+		} else {
+			response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, removeTopStruct(errs.Translate(trans)))
+		}
+		return
+	}
+
+	context, err := server.UpdateContext(req)
+	if err != nil {
+		response.Response(ctx, http.StatusInternalServerError, http.StatusInternalServerError, gin.H{}, busy)
+		return
+	}
+
+	response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{
+		"context": context,
+	}, updateSuccess)
+}

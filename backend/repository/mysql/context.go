@@ -39,3 +39,8 @@ func DeleteContext(id int64) error {
 	err := DB.Delete(&model.Context{}, id).Error
 	return err
 }
+
+func UpdateContext(con *model.Context) (*model.Context, error) {
+	err := DB.Save(&con).Error
+	return con, err
+}

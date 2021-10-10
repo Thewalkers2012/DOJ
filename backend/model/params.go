@@ -161,3 +161,11 @@ type GetContextParams struct {
 type DeleteContextParams struct {
 	ContextID int64 `form:"contextID"`
 }
+
+type UpdateContextParams struct {
+	ID        int64  `json:"contextID"`
+	Title     string `json:"title"`
+	StartTime Time   `json:"startTime"`
+	EndTime   Time   `json:"endTime"`
+	Author    string `json:"author"`
+}
