@@ -32,3 +32,8 @@ func GetContextList(offset, limit int) ([]*model.Context, int64, error) {
 func GetContext(id int64) (*model.Context, error) {
 	return mysql.GetContextByID(id)
 }
+
+// DeleteContext 删除题目
+func DeleteContext(id int64) error {
+	return mysql.DeleteContext(id)
+}

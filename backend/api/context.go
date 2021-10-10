@@ -98,3 +98,27 @@ func GetContext(ctx *gin.Context) {
 		"context": context,
 	}, GetContextSuccess)
 }
+
+// delete context
+func DeleteContext(ctx *gin.Context) {
+	req := new(model.DeleteContextParams)
+	if err := ctx.ShouldBindQuery(req); err != nil {
+		zap.L().Error("Delete Context failed", zap.Error(err))
+
+		errs, ok := err.(validator.ValidationErrors)
+		if !ok {
+			response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, err.Error())
+		} else {
+			response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, removeTopStruct(errs.Translate(trans)))
+		}
+		return
+	}
+
+	err := server.DeleteContext(req.ContextID)
+	if err != nil {
+		response.Response(ctx, http.StatusInternalServerError, http.StatusInternalServerError, gin.H{}, busy)
+		return
+	}
+
+	response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{}, deleteProblemSuccess)
+}

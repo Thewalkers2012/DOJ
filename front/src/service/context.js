@@ -6,7 +6,11 @@ const getContextList = ({ pageNum, pageSize }) => request.get('context_list', { 
 // 获取比赛
 const getContext = (id) => request.get(`context/${id}`);
 
+// 删除比赛
+const deleteContext = ({ contextID }) => request.delete('context', { params: { contextID } });
+
 export default {
   getContextList,
   getContext,
+  deleteContext,
 };

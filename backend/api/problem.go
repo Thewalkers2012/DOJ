@@ -2,7 +2,6 @@ package api
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -138,8 +137,6 @@ func DeleteProblem(ctx *gin.Context) {
 		}
 		return
 	}
-
-	fmt.Println(req.ProblemID)
 
 	err := server.DeleteProblem(req.ProblemID)
 	if err != nil {

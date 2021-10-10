@@ -53,6 +53,7 @@ import contextService from '../../service/context';
 export default {
   data() {
     return {
+      // 获取比赛列表的相关内容
       params: {
         pageNum: 1,
         pageSize: 10,
@@ -68,6 +69,10 @@ export default {
         { key: 'author', label: '发起人' },
         { key: 'context_id', label: '' },
       ],
+      // 删除比赛相关内容
+      deleteParams: {
+        contextID: 1,
+      },
     };
   },
 
@@ -78,8 +83,22 @@ export default {
       this.title = res.data.title;
     },
 
-    deleteContext(id) {
-      console.log(id);
+    async deleteContext(id) {
+      this.deleteParams.contextID = id;
+      await contextService.deleteContext(this.deleteParams).then(() => {
+        this.$bvToast.toast('删除比赛成功', {
+          title: '删除成功',
+          variant: 'success',
+          solid: true,
+        });
+        this.getContextList();
+      }).catch((err) => {
+        this.$bvToast.toast(err.response.dada.msg, {
+          title: '删除失败',
+          variant: 'danger',
+          solid: true,
+        });
+      });
     },
 
     updateContext(id) {

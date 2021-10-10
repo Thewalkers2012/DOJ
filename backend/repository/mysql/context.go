@@ -34,3 +34,8 @@ func GetContextByID(id int64) (*model.Context, error) {
 	err := DB.Where("id = ?", id).First(context).Error
 	return context, err
 }
+
+func DeleteContext(id int64) error {
+	err := DB.Delete(&model.Context{}, id).Error
+	return err
+}

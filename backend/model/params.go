@@ -157,3 +157,7 @@ type GetContextListParams struct {
 type GetContextParams struct {
 	ContextID int64 `params:"contextID"`
 }
+
+type DeleteContextParams struct {
+	ContextID int64 `form:"contextID"`
+}
