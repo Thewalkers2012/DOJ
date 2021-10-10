@@ -13,9 +13,14 @@ const deleteContext = ({ contextID }) => request.delete('context', { params: { c
 // eslint-disable-next-line object-curly-newline
 const updateContext = ({ contextID, title, startTime, endTime, author }) => request.put('context', { contextID, title, startTime, endTime, author });
 
+// 创建比赛
+// eslint-disable-next-line object-curly-newline
+const createContext = ({ title, startTime, endTime, author }) => request.post('context', { title, startTime, endTime, author });
+
 export default {
   getContextList,
   getContext,
   deleteContext,
   updateContext,
+  createContext,
 };

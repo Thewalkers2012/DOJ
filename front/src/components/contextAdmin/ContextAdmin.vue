@@ -2,8 +2,71 @@
   <div>
     <div class="d-flex justify-content-between align-items-center">
       <div></div>
-      <b-button variant="outline-primary" size="lg"> 添加比赛 </b-button>
+      <b-button variant="outline-primary" size="lg" v-b-modal.createContext>
+        创建比赛
+      </b-button>
     </div>
+
+    <!-- 创建比赛开始 -->
+    <b-modal
+      id="createContext"
+      ref="createContext"
+      title="创建表单"
+      hide-footer
+    >
+      <b-form-group label="比赛名称">
+        <b-form-input
+          v-model="$v.createParams.title.$model"
+          required
+          :state="validateState2('title')"
+          placeholder="请输入比赛名称"
+        ></b-form-input>
+        <b-form-invalid-feedback :state="validateState2('title')">
+          比赛名称为必填字段
+        </b-form-invalid-feedback>
+      </b-form-group>
+      <b-form-group label="发起人">
+        <b-form-input
+          v-model="$v.createParams.author.$model"
+          required
+          :state="validateState2('author')"
+          placeholder="请输入比赛的发起人"
+        ></b-form-input>
+        <b-form-invalid-feedback :state="validateState2('author')">
+          比赛的发起人为必填字段
+        </b-form-invalid-feedback>
+      </b-form-group>
+      <b-form-group label="开始时间">
+        <b-form-input
+          v-model="$v.createParams.startTime.$model"
+          required
+          :state="validateState2('startTime')"
+          placeholder="时间格式：xx-xx-xx xx:xx:xx"
+        ></b-form-input>
+        <b-form-invalid-feedback :state="validateState2('startTime')">
+          比赛的开始时间为必填字段
+        </b-form-invalid-feedback>
+      </b-form-group>
+      <b-form-group label="结束时间">
+        <b-form-input
+          v-model="$v.createParams.endTime.$model"
+          required
+          :state="validateState2('endTime')"
+          placeholder="时间格式：xx-xx-xx xx:xx:xx"
+        ></b-form-input>
+        <b-form-invalid-feedback :state="validateState2('endTime')">
+          比赛的结束时间为必填字段
+        </b-form-invalid-feedback>
+      </b-form-group>
+      <!-- 按钮 -->
+      <b-form-group>
+        <b-button variant="outline-info" block @click="createContext"
+          >创建</b-button
+        >
+      </b-form-group>
+    </b-modal>
+    <!-- 创建比赛结束 -->
+
     <!-- 修改比赛开始 -->
     <b-modal
       id="updateContext"
@@ -142,12 +205,33 @@ export default {
         endTime: '',
         author: '',
       },
+      // 创建表单相关
+      createParams: {
+        title: '',
+        startTime: '',
+        endTime: '',
+        author: '',
+      },
     };
   },
 
   // 数据校验部分
   validations: {
     updateParams: {
+      title: {
+        required,
+      },
+      startTime: {
+        required,
+      },
+      endTime: {
+        required,
+      },
+      author: {
+        required,
+      },
+    },
+    createParams: {
       title: {
         required,
       },
@@ -202,6 +286,16 @@ export default {
       this.$v.$reset();
     },
 
+    clearCreateParams() {
+      this.createParams.title = '';
+      this.createParams.startTime = '';
+      this.createParams.endTime = '';
+      this.createParams.author = '';
+      // eslint-disable-next-line dot-notation
+      this.$refs['createContext'].hide();
+      this.$v.$reset();
+    },
+
     async updateContext() {
       this.$v.updateParams.$touch();
       if (this.$v.updateParams.$anyError) {
@@ -218,6 +312,36 @@ export default {
         });
 
         this.clearUpdateParams();
+        this.getContextList();
+      }).catch((err) => {
+        this.$bvToast.toast(err.response.data.msg, {
+          title: '更新失败',
+          variant: 'danger',
+          solid: true,
+        });
+      });
+    },
+
+    validateState2(name) {
+      // 这里是 es6 的解构赋值
+      const { $dirty, $error } = this.$v.createParams[name];
+      return $dirty ? !$error : null;
+    },
+
+    async createContext() {
+      this.$v.createParams.$touch();
+      if (this.$v.createParams.$anyError) {
+        return;
+      }
+
+      await contextService.createContext(this.createParams).then(() => {
+        this.$bvToast.toast('创建比赛成功', {
+          title: '创建成功',
+          variant: 'success',
+          solid: true,
+        });
+
+        this.clearCreateParams();
         this.getContextList();
       }).catch((err) => {
         this.$bvToast.toast(err.response.data.msg, {
