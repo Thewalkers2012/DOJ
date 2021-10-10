@@ -23,7 +23,7 @@
       <UserAdmin v-if="isUser"></UserAdmin>
       <CategoryAdmin v-else-if="isCategory"></CategoryAdmin>
       <ProblemAdmin v-else-if="isProblem"> </ProblemAdmin>
-      <Markdown v-else></Markdown>
+      <ContextAdmin v-else></ContextAdmin>
     </b-card>
   </div>
 </template>
@@ -32,7 +32,7 @@
 import UserAdmin from '../../components/userAdmin/UserAdmin.vue';
 import CategoryAdmin from '../../components/categoryAdmin/CategoryAdmin.vue';
 import ProblemAdmin from '../../components/problemAdmin/ProblemAdmin.vue';
-import Markdown from '../../components/markdown/Markdown.vue';
+import ContextAdmin from '../../components/contextAdmin/ContextAdmin.vue';
 
 export default {
   name: 'Admin',
@@ -74,7 +74,7 @@ export default {
     UserAdmin,
     CategoryAdmin,
     ProblemAdmin,
-    Markdown,
+    ContextAdmin,
   },
 };
 </script>

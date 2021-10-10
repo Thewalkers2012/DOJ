@@ -1,16 +1,28 @@
 <template>
-  <div class="mt-3">
-    <b-card>
-      <h2 class="text-center">比赛</h2>
+  <div>
+    <div class="d-flex justify-content-between align-items-center">
+      <div></div>
+      <b-button variant="outline-primary" size="lg"> 添加比赛 </b-button>
+    </div>
+    <b-card class="mt-3">
       <b-table hover :items="contexts" :fields="fields" class="mt-3">
         <template #cell(context_id)="data">
           <b-button
-            variant="info"
-            @click="getContext(data.value)"
+            variant="primary"
+            @click="updateContext(data.value)"
             size="sm"
             pill
           >
-            点击进入
+            修改
+          </b-button>
+          <b-button
+            variant="danger"
+            class="ml-3"
+            @click="deleteContext(data.value)"
+            size="sm"
+            pill
+          >
+            删除
           </b-button>
         </template>
         <template #cell(defunct)="data">
@@ -66,9 +78,12 @@ export default {
       this.title = res.data.title;
     },
 
-    getContext(id) {
-      sessionStorage.setItem('context_id', id);
-      this.$router.push(`/context/${id}`);
+    deleteContext(id) {
+      console.log(id);
+    },
+
+    updateContext(id) {
+      console.log(id);
     },
   },
 
