@@ -18,14 +18,43 @@ func GetContextList(offset, limit int) ([]*model.Context, int64, error) {
 
 	for i := 0; i < len(contexts); i++ {
 		if time.Time(contexts[i].StartTime).After(time.Now()) {
-			contexts[i].Defunct = "1"
+			// 比赛尚未开始
+			if contexts[i].Defunct != "1" {
+				_, err := mysql.UpdateContext(contexts[i])
+				if err != nil {
+					zap.L().Error("change defunct failed", zap.Error(err))
+					return nil, 0, err
+				}
+
+				contexts[i].Defunct = "1"
+			}
 			continue
 		}
+
+		// 比赛已经进行
 		if time.Time(contexts[i].EndTime).After(time.Now()) {
-			contexts[i].Defunct = "2"
+			if contexts[i].Defunct != "2" {
+				contexts[i].Defunct = "2"
+				_, err := mysql.UpdateContext(contexts[i])
+				if err != nil {
+					zap.L().Error("change defunct failed", zap.Error(err))
+					return nil, 0, err
+				}
+			}
+
 			continue
 		}
-		contexts[i].Defunct = "3"
+
+		// 比赛已经结束
+		if contexts[i].Defunct != "3" {
+			contexts[i].Defunct = "3"
+			_, err := mysql.UpdateContext(contexts[i])
+			if err != nil {
+				zap.L().Error("change defunct failed", zap.Error(err))
+				return nil, 0, err
+			}
+
+		}
 	}
 
 	return contexts, total, err
@@ -54,4 +83,8 @@ func UpdateContext(req *model.UpdateContextParams) (*model.Context, error) {
 	context.EndTime = req.EndTime
 
 	return mysql.UpdateContext(context)
+}
+
+func AddProblemToContext(req *model.AddProblemParams) error {
+	return mysql.CreateContextProblem(req)
 }

@@ -169,3 +169,9 @@ type UpdateContextParams struct {
 	EndTime   Time   `json:"endTime"`
 	Author    string `json:"author"`
 }
+
+type AddProblemParams struct {
+	ProblemID int64  `json:"problemID" binding:"required"`
+	ContextID int64  `json:"contextID" binding:"required"`
+	Title     string `json:"title"`
+}

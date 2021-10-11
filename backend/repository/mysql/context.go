@@ -44,3 +44,15 @@ func UpdateContext(con *model.Context) (*model.Context, error) {
 	err := DB.Save(&con).Error
 	return con, err
 }
+
+func CreateContextProblem(req *model.AddProblemParams) error {
+	con := &model.ContextProblem{
+		ProblemID: req.ProblemID,
+		ContextID: req.ContextID,
+		Title:     req.Title,
+	}
+
+	err := DB.Create(con).Error
+
+	return err
+}

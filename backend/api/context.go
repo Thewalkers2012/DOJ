@@ -15,9 +15,10 @@ import (
 )
 
 const (
-	CreateContextSuccess = "创建比赛成功"
-	GetContextSuccess    = "获取比赛成功"
-	getContextFiled      = "获取比赛失败"
+	CreateContextSuccess       = "创建比赛成功"
+	GetContextSuccess          = "获取比赛成功"
+	getContextFiled            = "获取比赛失败"
+	AddProblemToContextSuccess = "添加题目成功"
 )
 
 func CreateContextHandler(ctx *gin.Context) {
@@ -147,4 +148,29 @@ func UpdateContext(ctx *gin.Context) {
 	response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{
 		"context": context,
 	}, updateSuccess)
+}
+
+func AddProblemToContext(ctx *gin.Context) {
+	req := new(model.AddProblemParams)
+	if err := ctx.ShouldBindJSON(req); err != nil {
+		zap.L().Error("api add problem to context failed", zap.Error(err))
+
+		errs, ok := err.(validator.ValidationErrors)
+		if !ok {
+			response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, err.Error())
+		} else {
+			response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, removeTopStruct(errs.Translate(trans)))
+		}
+		return
+	}
+
+	err := server.AddProblemToContext(req)
+	if err != nil {
+		zap.L().Error("server add problem failed", zap.Error(err))
+
+		response.Response(ctx, http.StatusInternalServerError, http.StatusInternalServerError, gin.H{}, busy)
+		return
+	}
+
+	response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{}, AddProblemToContextSuccess)
 }

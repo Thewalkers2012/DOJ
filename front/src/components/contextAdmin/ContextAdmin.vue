@@ -126,15 +126,48 @@
       </b-form-group>
     </b-modal>
     <!-- 修改比赛结束 -->
+
+    <!-- 添加题目开始 -->
+    <b-modal
+      title="添加题目"
+      hide-footer
+      id="addProblem"
+      ref="addProblem"
+      size="xl"
+    >
+      <b-table
+        hover
+        :items="problems"
+        :fields="field_problem"
+        class="text-dark"
+      >
+        <template #cell(problem_id)="data">
+          <b-button variant="info"> 添加 {{ data.value }} </b-button>
+        </template>
+      </b-table>
+      <div class="overflow-auto mt-3">
+        <b-pagination
+          v-model="currentPage_problem"
+          :total-rows="total_problem"
+          :per-page="params_problem.pageSize"
+          align="right"
+        ></b-pagination>
+      </div>
+    </b-modal>
+    <!-- 添加题目结束 -->
     <b-card class="mt-3">
       <b-table hover :items="contexts" :fields="fields" class="mt-3">
         <template #cell(context_id)="data">
+          <b-button variant="info" size="sm" pill v-b-modal.addProblem>
+            添加题目
+          </b-button>
           <b-button
             variant="primary"
             @click="setUpdateID(data.value)"
             size="sm"
             pill
             v-b-modal.updateContext
+            class="ml-3"
           >
             修改
           </b-button>
@@ -173,6 +206,7 @@
 <script>
 import { required } from 'vuelidate/lib/validators';
 import contextService from '../../service/context';
+import problemService from '../../service/problemService';
 
 export default {
   data() {
@@ -212,6 +246,22 @@ export default {
         endTime: '',
         author: '',
       },
+      // 给比赛添加题目相关
+      problems: [],
+      field_problem: [
+        { key: 'author', label: '作者' },
+        { key: 'difficulty_level', label: '难度' },
+        { key: 'problem_name', label: '题目描述' },
+        { key: 'time_limit', label: '时间限制（ms）' },
+        { key: 'memory_limit', label: '内存限制（b）' },
+        { key: 'problem_id', label: '' },
+      ],
+      params_problem: {
+        pageNum: 1,
+        pageSize: 10,
+      },
+      currentPage_problem: 1,
+      total_problem: 1,
     };
   },
 
@@ -357,15 +407,27 @@ export default {
       const { $dirty, $error } = this.$v.updateParams[name];
       return $dirty ? !$error : null;
     },
+
+    async getProblemList() {
+      const { data: res } = await problemService.getProblemList(this.params);
+      this.problems = res.data.problems;
+
+      this.total_problem = res.data.total;
+    },
   },
 
   created() {
     this.getContextList();
+    this.getProblemList();
   },
 
   watch: {
     currentPage() {
       this.params.pageNum = this.currentPage;
+      this.getProblemList();
+    },
+    currentPage_problem() {
+      this.params_problem.pageNum = this.currentPage_problem;
       this.getProblemList();
     },
   },
