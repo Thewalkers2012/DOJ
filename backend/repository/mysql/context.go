@@ -1,6 +1,8 @@
 package mysql
 
-import "github.com/Thewalkers2012/DOJ/model"
+import (
+	"github.com/Thewalkers2012/DOJ/model"
+)
 
 func CreateContext(req *model.CreateContextParams) (*model.Context, error) {
 
@@ -54,5 +56,11 @@ func CreateContextProblem(req *model.AddProblemParams) error {
 
 	err := DB.Create(con).Error
 
+	return err
+}
+
+func ProblemInContext(problemID int64, contextID int64) error {
+	contextProblem := new(model.ContextProblem)
+	err := DB.Where("problem_id = ? and context_id = ?", problemID, contextID).First(contextProblem).Error
 	return err
 }

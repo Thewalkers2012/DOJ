@@ -175,3 +175,8 @@ type AddProblemParams struct {
 	ContextID int64  `json:"contextID" binding:"required"`
 	Title     string `json:"title"`
 }
+
+type PorblemInContextParams struct {
+	ProblemID int64 `form:"problemID" binding:"required"`
+	ContextID int64 `form:"contextID" binding:"required"`
+}

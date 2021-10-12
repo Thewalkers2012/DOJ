@@ -1,11 +1,13 @@
 package server
 
 import (
+	"errors"
 	"time"
 
 	"github.com/Thewalkers2012/DOJ/model"
 	"github.com/Thewalkers2012/DOJ/repository/mysql"
 	"go.uber.org/zap"
+	"gorm.io/gorm"
 )
 
 func CreateContext(req *model.CreateContextParams) (*model.Context, error) {
@@ -87,4 +89,41 @@ func UpdateContext(req *model.UpdateContextParams) (*model.Context, error) {
 
 func AddProblemToContext(req *model.AddProblemParams) error {
 	return mysql.CreateContextProblem(req)
+}
+
+func ProblemInContext(problemID, contextID int64) (bool, error) {
+	_, err := mysql.GetProblemByID(problemID)
+	if err != nil {
+		zap.L().Error("mysql GetProblemByID failed", zap.Error(err))
+
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return false, nil
+		}
+
+		return false, err
+	}
+
+	_, err = mysql.GetContextByID(contextID)
+	if err != nil {
+		zap.L().Error("mysql GetContextByID failed", zap.Error(err))
+
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return false, nil
+		}
+
+		return false, err
+	}
+
+	err = mysql.ProblemInContext(problemID, contextID)
+	if err != nil {
+		zap.L().Error("mysql ProblemInContext failed", zap.Error(err))
+
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return false, nil
+		}
+
+		return false, err
+	}
+
+	return true, nil
 }
