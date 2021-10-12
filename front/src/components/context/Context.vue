@@ -45,7 +45,6 @@ export default {
       this.id = sessionStorage.getItem('context_id');
       const { data: res } = await contextService.getContext(this.id);
       this.context = res.data.context;
-      console.log(res.data.context);
     },
   },
 

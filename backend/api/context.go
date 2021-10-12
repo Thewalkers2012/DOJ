@@ -15,11 +15,13 @@ import (
 )
 
 const (
-	CreateContextSuccess       = "创建比赛成功"
-	GetContextSuccess          = "获取比赛成功"
-	getContextFiled            = "获取比赛失败"
-	AddProblemToContextSuccess = "添加题目成功"
-	QuerySuccess               = "查询成功"
+	CreateContextSuccess          = "创建比赛成功"
+	GetContextSuccess             = "获取比赛成功"
+	getContextFiled               = "获取比赛失败"
+	AddProblemToContextSuccess    = "添加题目成功"
+	QuerySuccess                  = "查询成功"
+	DeteleProblemInContextSuccess = "从比赛中删除题目成功"
+	NotFound                      = "好像有什么木有找到呢"
 )
 
 func CreateContextHandler(ctx *gin.Context) {
@@ -199,4 +201,32 @@ func ProblemInContext(ctx *gin.Context) {
 	response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{
 		"inThere": inThere,
 	}, QuerySuccess)
+}
+
+func DeletePorblemInContext(ctx *gin.Context) {
+	req := new(model.DeleteProblemInContext)
+	if err := ctx.ShouldBindQuery(req); err != nil {
+		zap.L().Error("api delete problem in context", zap.Error(err))
+
+		errs, ok := err.(validator.ValidationErrors)
+		if !ok {
+			response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, err.Error())
+		} else {
+			response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, removeTopStruct(errs.Translate(trans)))
+		}
+		return
+	}
+
+	err := server.DeleteProblemInContext(req.ContextID, req.ProblemID)
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			response.Response(ctx, http.StatusNotFound, http.StatusNotFound, gin.H{}, NotFound)
+			return
+		}
+
+		response.Response(ctx, http.StatusInternalServerError, http.StatusInternalServerError, gin.H{}, busy)
+		return
+	}
+
+	response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{}, DeteleProblemInContextSuccess)
 }

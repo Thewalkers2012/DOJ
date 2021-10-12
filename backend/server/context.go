@@ -127,3 +127,19 @@ func ProblemInContext(problemID, contextID int64) (bool, error) {
 
 	return true, nil
 }
+
+func DeleteProblemInContext(contextID, problemID int64) error {
+	_, err := mysql.GetProblemByID(problemID)
+	if err != nil {
+		zap.L().Error("mysql GetProblemByID failed", zap.Error(err))
+		return err
+	}
+
+	_, err = mysql.GetContextByID(contextID)
+	if err != nil {
+		zap.L().Error("mysql GetContextByID failed", zap.Error(err))
+		return err
+	}
+
+	return mysql.DeleteProblemInContext(contextID, problemID)
+}

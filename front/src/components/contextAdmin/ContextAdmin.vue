@@ -142,7 +142,9 @@
         class="text-dark"
       >
         <template #cell(problem_id)="data">
-          <b-button variant="info"> 添加 {{ data.value }} </b-button>
+          <b-button variant="primary" pill size="sm">
+            添加 {{ data.value }}
+          </b-button>
         </template>
       </b-table>
       <div class="overflow-auto mt-3">
@@ -158,12 +160,18 @@
     <b-card class="mt-3">
       <b-table hover :items="contexts" :fields="fields" class="mt-3">
         <template #cell(context_id)="data">
-          <b-button variant="info" size="sm" pill v-b-modal.addProblem>
+          <b-button
+            variant="info"
+            size="sm"
+            pill
+            v-b-modal.addProblem
+            @click="setContextID(data.value)"
+          >
             添加题目
           </b-button>
           <b-button
             variant="primary"
-            @click="setUpdateID(data.value)"
+            @click="setContextID(data.value)"
             size="sm"
             pill
             v-b-modal.updateContext
@@ -262,6 +270,11 @@ export default {
       },
       currentPage_problem: 1,
       total_problem: 1,
+      // 比赛题目相关
+      problemInContextParams: {
+        contextID: 1,
+        problemID: 1,
+      },
     };
   },
 
@@ -322,7 +335,7 @@ export default {
       });
     },
 
-    setUpdateID(id) {
+    setContextID(id) {
       sessionStorage.setItem('context_id', id);
     },
 
@@ -406,6 +419,16 @@ export default {
       // 这里是 es6 的解构赋值
       const { $dirty, $error } = this.$v.updateParams[name];
       return $dirty ? !$error : null;
+    },
+
+    async problemInContext(problemID) {
+      this.problemInContextParams.problemID = parseInt(problemID, 10);
+      this.problemInContextParams.contextID = parseInt(sessionStorage.getItem('context_id'), 10);
+
+      const { data: res } = await contextService.problemInContext(this.problemInContextParams);
+      console.log(res.data.IsThere);
+
+      return true;
     },
 
     async getProblemList() {

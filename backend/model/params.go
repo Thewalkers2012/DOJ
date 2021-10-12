@@ -180,3 +180,8 @@ type PorblemInContextParams struct {
 	ProblemID int64 `form:"problemID" binding:"required"`
 	ContextID int64 `form:"contextID" binding:"required"`
 }
+
+type DeleteProblemInContext struct {
+	ProblemID int64 `form:"problemID" binding:"required"`
+	ContextID int64 `form:"contextID" binding:"required"`
+}

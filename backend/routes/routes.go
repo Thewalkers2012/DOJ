@@ -64,6 +64,7 @@ func Setup(mode string) *gin.Engine {
 	// 比赛题目相关
 	v1.POST("/context_problem", middleware.JWTAuthorMiddleware(), api.AddProblemToContext)
 	v1.GET("/context_problem", middleware.JWTAuthorMiddleware(), api.ProblemInContext)
+	v1.DELETE("context_problem", middleware.JWTAuthorMiddleware(), api.DeletePorblemInContext)
 
 	return r
 }

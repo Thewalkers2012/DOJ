@@ -17,10 +17,14 @@ const updateContext = ({ contextID, title, startTime, endTime, author }) => requ
 // eslint-disable-next-line object-curly-newline
 const createContext = ({ title, startTime, endTime, author }) => request.post('context', { title, startTime, endTime, author });
 
+// 该题目是否在比赛里面
+const problemInContext = ({ problemID, contextID }) => request.get('context_problem', { problemID, contextID });
+
 export default {
   getContextList,
   getContext,
   deleteContext,
   updateContext,
   createContext,
+  problemInContext,
 };

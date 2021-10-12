@@ -64,3 +64,8 @@ func ProblemInContext(problemID int64, contextID int64) error {
 	err := DB.Where("problem_id = ? and context_id = ?", problemID, contextID).First(contextProblem).Error
 	return err
 }
+
+func DeleteProblemInContext(contextID, problemID int64) error {
+	err := DB.Where("context_id = ? and problem_id = ?", contextID, problemID).Delete(model.ContextProblem{}).Error
+	return err
+}
