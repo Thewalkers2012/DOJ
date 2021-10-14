@@ -201,3 +201,7 @@ type ContextProblemResponse struct {
 	Author          string `json:"author"`
 	DifficultyLevel string `json:"difficulty_level"`
 }
+
+type GetContextProblemParams struct {
+	ContextID int64 `form:"contextID"`
+}

@@ -69,3 +69,9 @@ func DeleteProblemInContext(contextID, problemID int64) error {
 	err := DB.Where("context_id = ? and problem_id = ?", contextID, problemID).Delete(model.ContextProblem{}).Error
 	return err
 }
+
+func GetAllContextProblemIDs(contextID int64) ([]*model.ContextProblem, error) {
+	contextProblems := []*model.ContextProblem{}
+	err := DB.Model(&model.ContextProblem{}).Where("context_id", contextID).Find(&contextProblems).Error
+	return contextProblems, err
+}

@@ -2,7 +2,6 @@ package server
 
 import (
 	"errors"
-	"fmt"
 	"time"
 
 	"github.com/Thewalkers2012/DOJ/model"
@@ -166,9 +165,26 @@ func ContextProblemList(contextID int64, offset, limit int) ([]*model.ContextPro
 		}
 	}
 
-	for _, v := range res {
-		fmt.Println(*v)
+	return res, total, err
+}
+
+func GetAllContextProblem(contextID int64) ([]*model.Problem, error) {
+	contextProblems, err := mysql.GetAllContextProblemIDs(contextID)
+	if err != nil {
+		zap.L().Error("mysql GetAllContextProblemIDs failed", zap.Error(err))
+		return nil, err
 	}
 
-	return res, total, err
+	n := len(contextProblems)
+
+	problems := make([]*model.Problem, n)
+	for i := 0; i < n; i++ {
+		problems[i], err = mysql.GetProblemByID(contextProblems[i].ProblemID)
+		if err != nil {
+			zap.L().Error("mysql GetProblemByID failed", zap.Error(err))
+			return nil, err
+		}
+	}
+
+	return problems, err
 }

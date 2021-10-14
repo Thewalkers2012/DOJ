@@ -63,9 +63,10 @@ func Setup(mode string) *gin.Engine {
 
 	// 比赛题目相关
 	v1.POST("/context_problem", middleware.JWTAuthorMiddleware(), api.AddProblemToContext)
-	v1.GET("/context_problem", middleware.JWTAuthorMiddleware(), api.ProblemInContext)
-	v1.DELETE("context_problem", middleware.JWTAuthorMiddleware(), api.DeletePorblemInContext)
+	v1.GET("/context_problem", middleware.JWTAuthorMiddleware(), api.ProblemInContext) // 判断该题目是否在 context 中
+	v1.DELETE("/context_problem", middleware.JWTAuthorMiddleware(), api.DeletePorblemInContext)
 	v1.GET("/context_problem_list", middleware.JWTAuthorMiddleware(), api.ContextProblemList)
+	v1.GET("/context_problems", middleware.JWTAuthorMiddleware(), api.GetAllContextProblem)
 
 	return r
 }

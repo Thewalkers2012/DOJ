@@ -23,6 +23,7 @@ const (
 	DeteleProblemInContextSuccess = "从比赛中删除题目成功"
 	NotFound                      = "好像有什么木有找到呢"
 	GetContextProblemSuccess      = "获取比赛题目列表成功"
+	GetAllContextProblemSuccess   = "获取比赛中的所有题目成功"
 )
 
 func CreateContextHandler(ctx *gin.Context) {
@@ -259,4 +260,29 @@ func ContextProblemList(ctx *gin.Context) {
 		"contextProblems": contextProblems,
 		"total":           total,
 	}, GetContextProblemSuccess)
+}
+
+func GetAllContextProblem(ctx *gin.Context) {
+	req := new(model.GetContextProblemParams)
+	if err := ctx.ShouldBindQuery(req); err != nil {
+		zap.L().Error("api get all context problems failed", zap.Error(err))
+
+		errs, ok := err.(validator.ValidationErrors)
+		if !ok {
+			response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, err.Error())
+		} else {
+			response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, removeTopStruct(errs.Translate(trans)))
+		}
+		return
+	}
+
+	problems, err := server.GetAllContextProblem(req.ContextID)
+	if err != nil {
+		response.Response(ctx, http.StatusInternalServerError, http.StatusInternalServerError, gin.H{}, busy)
+		return
+	}
+
+	response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{
+		"problems": problems,
+	}, GetAllContextProblemSuccess)
 }
