@@ -30,8 +30,11 @@ const addProblemToContext = ({
 // 将比赛中的题目删除
 const deleteProblemInContext = ({ problemID, contextID }) => request.delete('context_problem', { params: { problemID, contextID } });
 
-// 获取比赛中的题目列表
+// 添加到比赛中的题目
 const getContextProblemList = ({ contextID, pageNum, pageSize }) => request.get('context_problem_list', { params: { contextID, pageNum, pageSize } });
+
+// 获取比赛中的题目
+const getAllContextProblem = ({ contextID }) => request.get('context_problems', { params: { contextID } });
 
 export default {
   getContextList,
@@ -43,4 +46,5 @@ export default {
   addProblemToContext,
   deleteProblemInContext,
   getContextProblemList,
+  getAllContextProblem,
 };
