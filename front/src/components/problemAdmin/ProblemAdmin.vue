@@ -114,6 +114,8 @@
       </b-form>
     </b-modal>
     <!-- model 结束 -->
+
+    <!-- 将题目添加到比赛的 model 结束 -->
     <div class="d-flex justify-content-between align-items-center mt-3 mb-3">
       <div></div>
       <b-button variant="outline-primary" size="lg" v-b-modal.addProblem
@@ -136,6 +138,7 @@
             @click="problemDelete(data.value)"
             size="sm"
             class="ml-3"
+            pill
           >
             删除
           </b-button>
@@ -156,6 +159,7 @@
 <script>
 import { required } from 'vuelidate/lib/validators';
 import problemService from '../../service/problemService';
+// import contextService from '../../service/context';
 
 export default {
   data() {
@@ -174,7 +178,7 @@ export default {
         { key: 'problem_name', label: '题目描述' },
         { key: 'time_limit', label: '时间限制 （ms）' },
         { key: 'memory_limit', label: '内存限制（b）' },
-        { key: 'problem_id', label: '操作' },
+        { key: 'problem_id', label: '' },
       ],
       testCases: [],
       store: [],
@@ -222,12 +226,14 @@ export default {
       const { $dirty, $error } = this.$v.problem[name];
       return $dirty ? !$error : null;
     },
+
     async getProblemList() {
       const { data: res } = await problemService.getProblemList(this.params);
       this.problems = res.data.problems;
 
       this.total = res.data.total;
     },
+
     clearParams() {
       this.problem.problemName = '';
       this.problem.description = '';
@@ -240,6 +246,7 @@ export default {
       this.$refs['addProblem'].hide();
       this.$v.$reset();
     },
+
     async createProblem() {
       this.problem.timeLimit = parseInt(this.problem.timeLimit, 10);
       this.problem.memoryLimit = parseInt(this.problem.memoryLimit, 10);
@@ -273,6 +280,7 @@ export default {
         });
       });
     },
+
     async problemDelete(id) {
       this.deleteProblemParams.problemID = id;
       await problemService.deleteProblem(this.deleteProblemParams).then(() => {
@@ -291,12 +299,14 @@ export default {
       });
     },
   },
+
   created() {
     this.getProblemList();
     for (let i = 0; i < 10; i += 1) {
       this.store[i] = {};
     }
   },
+
   watch: {
     currentPage() {
       this.params.pageNum = this.currentPage;

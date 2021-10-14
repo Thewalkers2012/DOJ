@@ -65,6 +65,7 @@ func Setup(mode string) *gin.Engine {
 	v1.POST("/context_problem", middleware.JWTAuthorMiddleware(), api.AddProblemToContext)
 	v1.GET("/context_problem", middleware.JWTAuthorMiddleware(), api.ProblemInContext)
 	v1.DELETE("context_problem", middleware.JWTAuthorMiddleware(), api.DeletePorblemInContext)
+	v1.GET("/context_problem_list", middleware.JWTAuthorMiddleware(), api.ContextProblemList)
 
 	return r
 }

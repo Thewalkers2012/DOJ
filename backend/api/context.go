@@ -22,6 +22,7 @@ const (
 	QuerySuccess                  = "查询成功"
 	DeteleProblemInContextSuccess = "从比赛中删除题目成功"
 	NotFound                      = "好像有什么木有找到呢"
+	GetContextProblemSuccess      = "获取比赛题目列表成功"
 )
 
 func CreateContextHandler(ctx *gin.Context) {
@@ -229,4 +230,33 @@ func DeletePorblemInContext(ctx *gin.Context) {
 	}
 
 	response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{}, DeteleProblemInContextSuccess)
+}
+
+func ContextProblemList(ctx *gin.Context) {
+	req := new(model.ContextProblemParams)
+	if err := ctx.ShouldBindQuery(req); err != nil {
+		zap.L().Error("api context problem list failed", zap.Error(err))
+
+		errs, ok := err.(validator.ValidationErrors)
+		if !ok {
+			response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, err.Error())
+		} else {
+			response.Response(ctx, http.StatusBadRequest, http.StatusBadRequest, gin.H{}, removeTopStruct(errs.Translate(trans)))
+		}
+		return
+	}
+
+	offset := req.PageNum
+	limit := req.PageSize
+
+	contextProblems, total, err := server.ContextProblemList(req.ContextID, (offset-1)*limit, limit)
+	if err != nil {
+		response.Response(ctx, http.StatusInternalServerError, http.StatusInternalServerError, gin.H{}, busy)
+		return
+	}
+
+	response.Response(ctx, http.StatusOK, http.StatusOK, gin.H{
+		"contextProblems": contextProblems,
+		"total":           total,
+	}, GetContextProblemSuccess)
 }

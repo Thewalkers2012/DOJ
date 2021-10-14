@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 <template>
   <div>
     <div class="d-flex justify-content-between align-items-center">
@@ -141,10 +142,30 @@
         :fields="field_problem"
         class="text-dark"
       >
-        <template #cell(problem_id)="data">
-          <b-button variant="primary" pill size="sm">
-            添加 {{ data.value }}
-          </b-button>
+        <template #cell(inContext)="data">
+          <b-badge pill variant="info" v-if="data.value"> 已存在 </b-badge>
+          <b-badge pill variant="warning" v-else>未存在 </b-badge>
+        </template>
+        <template #cell(problemID)="data">
+          <div>
+            <b-button
+              variant="primary"
+              pill
+              size="sm"
+              @click="addProblemInContext(data.value)"
+            >
+              添加
+            </b-button>
+            <b-button
+              variant="danger"
+              pill
+              size="sm"
+              class="ml-3"
+              @click="deleteProblem(data.value)"
+            >
+              删除
+            </b-button>
+          </div>
         </template>
       </b-table>
       <div class="overflow-auto mt-3">
@@ -214,7 +235,6 @@
 <script>
 import { required } from 'vuelidate/lib/validators';
 import contextService from '../../service/context';
-import problemService from '../../service/problemService';
 
 export default {
   data() {
@@ -257,14 +277,16 @@ export default {
       // 给比赛添加题目相关
       problems: [],
       field_problem: [
+        { key: 'inContext', label: '状态' },
         { key: 'author', label: '作者' },
         { key: 'difficulty_level', label: '难度' },
-        { key: 'problem_name', label: '题目描述' },
+        { key: 'problemName', label: '题目名称' },
         { key: 'time_limit', label: '时间限制（ms）' },
         { key: 'memory_limit', label: '内存限制（b）' },
-        { key: 'problem_id', label: '' },
+        { key: 'problemID', label: '' },
       ],
       params_problem: {
+        contextID: 1,
         pageNum: 1,
         pageSize: 10,
       },
@@ -272,6 +294,17 @@ export default {
       total_problem: 1,
       // 比赛题目相关
       problemInContextParams: {
+        contextID: 1,
+        problemID: 1,
+      },
+      // 向比赛里面添加题目
+      addProblemInContextParams: {
+        contextID: 1,
+        problemID: 1,
+        title: '',
+      },
+      // 从比赛中删除题目
+      deleteProblemParams: {
         contextID: 1,
         problemID: 1,
       },
@@ -337,6 +370,7 @@ export default {
 
     setContextID(id) {
       sessionStorage.setItem('context_id', id);
+      this.getProblemList();
     },
 
     clearUpdateParams() {
@@ -421,33 +455,97 @@ export default {
       return $dirty ? !$error : null;
     },
 
+    async getProblemList() {
+      this.problems = [];
+      this.params_problem.contextID = parseInt(sessionStorage.getItem('context_id'), 10);
+      const { data: res } = await contextService.getContextProblemList(this.params_problem);
+      this.problems = res.data.contextProblems;
+
+      this.total_problem = res.data.total;
+    },
+
+    // 关于将题目放到比赛里面
+
+    clearAddParams() {
+      this.addProblemInContextParams.problemID = 1;
+      this.addProblemInContextParams.contextID = 1;
+      this.addProblemInContextParams.title = '';
+    },
+
+    async addProblemInContext(problemID) {
+      this.problemInContextParams.problemID = parseInt(problemID, 10);
+      this.problemInContextParams.contextID = parseInt(sessionStorage.getItem('context_id'), 10);
+
+      this.addProblemInContextParams.problemID = parseInt(problemID, 10);
+      this.addProblemInContextParams.contextID = parseInt(sessionStorage.getItem('context_id'), 10);
+      this.addProblemInContextParams.title = `problemID_${problemID}`;
+
+      const { data: val } = await contextService.problemInContext(this.problemInContextParams);
+      if (val.data.inThere) {
+        this.$bvToast.toast('该题目已经在比赛中', {
+          title: '向比赛中添加题目失败',
+          variant: 'danger',
+          solid: true,
+        });
+        return;
+      }
+
+      await contextService.addProblemToContext(this.addProblemInContextParams).then(() => {
+        this.$bvToast.toast('向比赛中添加题目成功', {
+          title: '创建成功',
+          variant: 'success',
+          solid: true,
+        });
+
+        this.clearAddParams();
+        this.getProblemList();
+      }).catch((err) => {
+        this.$bvToast.toast(err.response.data.msg, {
+          title: '向比赛中添加题目失败',
+          variant: 'danger',
+          solid: true,
+        });
+      });
+    },
+
     async problemInContext(problemID) {
       this.problemInContextParams.problemID = parseInt(problemID, 10);
       this.problemInContextParams.contextID = parseInt(sessionStorage.getItem('context_id'), 10);
 
       const { data: res } = await contextService.problemInContext(this.problemInContextParams);
-      console.log(res.data.IsThere);
-
-      return true;
+      return res;
     },
 
-    async getProblemList() {
-      const { data: res } = await problemService.getProblemList(this.params);
-      this.problems = res.data.problems;
+    async deleteProblem(problemID) {
+      this.deleteProblemParams.problemID = problemID;
+      this.deleteProblemParams.contextID = parseInt(sessionStorage.getItem('context_id'), 10);
 
-      this.total_problem = res.data.total;
+      await contextService.deleteProblemInContext(this.deleteProblemParams).then(() => {
+        this.$bvToast.toast('从比赛中删除题目成功', {
+          title: '删除成功',
+          variant: 'success',
+          solid: true,
+        });
+        this.getProblemList();
+      }).catch((err) => {
+        this.$bvToast.toast(err.response.data.msg, {
+          title: '删除失败',
+          variant: 'danger',
+          solid: true,
+        });
+      });
     },
+
   },
 
   created() {
     this.getContextList();
-    this.getProblemList();
   },
 
   watch: {
     currentPage() {
       this.params.pageNum = this.currentPage;
-      this.getProblemList();
+      this.getContextList();
     },
     currentPage_problem() {
       this.params_problem.pageNum = this.currentPage_problem;

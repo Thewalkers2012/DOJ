@@ -185,3 +185,19 @@ type DeleteProblemInContext struct {
 	ProblemID int64 `form:"problemID" binding:"required"`
 	ContextID int64 `form:"contextID" binding:"required"`
 }
+
+type ContextProblemParams struct {
+	ContextID int64 `form:"contextID"`
+	PageNum   int   `form:"pageNum" binding:"required,min=1"`
+	PageSize  int   `form:"pageSize" binding:"required,min=5,max=10"`
+}
+
+type ContextProblemResponse struct {
+	InContext       bool   `json:"inContext"`
+	TimeLimit       int    `json:"time_limit"`
+	MemoryLimit     int    `json:"memory_limit"`
+	ProblemID       int64  `json:"problemID"`
+	ProblemName     string `json:"problemName"`
+	Author          string `json:"author"`
+	DifficultyLevel string `json:"difficulty_level"`
+}

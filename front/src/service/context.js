@@ -18,7 +18,20 @@ const updateContext = ({ contextID, title, startTime, endTime, author }) => requ
 const createContext = ({ title, startTime, endTime, author }) => request.post('context', { title, startTime, endTime, author });
 
 // 该题目是否在比赛里面
-const problemInContext = ({ problemID, contextID }) => request.get('context_problem', { problemID, contextID });
+const problemInContext = ({ problemID, contextID }) => request.get('context_problem', { params: { problemID, contextID } });
+
+// 将题目添加到比赛当中
+const addProblemToContext = ({
+  problemID,
+  contextID,
+  title,
+}) => request.post('context_problem', { problemID, contextID, title });
+
+// 将比赛中的题目删除
+const deleteProblemInContext = ({ problemID, contextID }) => request.delete('context_problem', { params: { problemID, contextID } });
+
+// 获取比赛中的题目列表
+const getContextProblemList = ({ contextID, pageNum, pageSize }) => request.get('context_problem_list', { params: { contextID, pageNum, pageSize } });
 
 export default {
   getContextList,
@@ -27,4 +40,7 @@ export default {
   updateContext,
   createContext,
   problemInContext,
+  addProblemToContext,
+  deleteProblemInContext,
+  getContextProblemList,
 };

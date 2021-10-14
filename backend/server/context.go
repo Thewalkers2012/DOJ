@@ -2,6 +2,7 @@ package server
 
 import (
 	"errors"
+	"fmt"
 	"time"
 
 	"github.com/Thewalkers2012/DOJ/model"
@@ -142,4 +143,32 @@ func DeleteProblemInContext(contextID, problemID int64) error {
 	}
 
 	return mysql.DeleteProblemInContext(contextID, problemID)
+}
+
+func ContextProblemList(contextID int64, offset, limit int) ([]*model.ContextProblemResponse, int64, error) {
+	problems, err := mysql.GetProblemList(offset, limit)
+	total := mysql.GetProblemSize()
+
+	n := len(problems)
+	res := make([]*model.ContextProblemResponse, n)
+
+	for i := 0; i < n; i++ {
+		inThere, _ := ProblemInContext(problems[i].ID, contextID)
+
+		res[i] = &model.ContextProblemResponse{
+			ProblemID:       problems[i].ID,
+			TimeLimit:       problems[i].TimeLimit,
+			MemoryLimit:     problems[i].MemoryLimit,
+			ProblemName:     problems[i].Name,
+			Author:          problems[i].Author,
+			DifficultyLevel: problems[i].DifficultyLevel,
+			InContext:       inThere,
+		}
+	}
+
+	for _, v := range res {
+		fmt.Println(*v)
+	}
+
+	return res, total, err
 }
