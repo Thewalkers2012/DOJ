@@ -14,7 +14,6 @@ const problemModule = {
   },
   actions: {
     setProblemID(context, id) {
-      console.log(id);
       context.commit('SET_PROBLEM_ID', id);
     },
     getProblemID(context) {

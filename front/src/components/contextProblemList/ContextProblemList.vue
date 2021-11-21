@@ -43,6 +43,7 @@ export default {
       this.problems = res.data.problems;
     },
     ToProblem(id) {
+      sessionStorage.setItem('problem_id', id);
       console.log(id);
     },
   },

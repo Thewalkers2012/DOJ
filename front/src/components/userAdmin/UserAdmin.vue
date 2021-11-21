@@ -281,7 +281,6 @@ export default {
     },
     setUpdateID(id) {
       this.updateParams.userID = id;
-      console.log(this.updateParams.userID);
     },
     async updateUser() {
       this.$v.updateParams.$touch();
